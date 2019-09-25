@@ -30,17 +30,17 @@ having                              return HAVING;
 
 or                                  return OR;
 and                                 return AND;
-xor                                return XOR;
+xor                                 return XOR;
 not                                 return NOT;
-"not in"           return NOTIN
-in                   return IN;
-[0-9]*(\.[0-9]+)?        return NUM;
-[_A-Za-z]+[A-Za-z0-9_]* return ID;
-"<="              return LE;
-">="              return GE;
-"=="              return EQ;
-"!="               return NE;
-.                     return yytext[0];
+"not in"                            return NOTIN
+in                                  return IN;
+[0-9]*(\.[0-9]+)?                   return NUM;
+[_A-Za-z]+[A-Za-z0-9_]*             return ID;
+"<="                                return LE;
+">="                                return GE;
+"=="                                return EQ;
+"!="                                return NE;
+.                                   return yytext[0];
 %%
 
 int yywrap()

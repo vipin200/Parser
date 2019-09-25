@@ -1,6 +1,6 @@
 %{
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h>     
 
 %}
 %token ID NUM SELECT NEWLINE DISTINCT FROM WHERE LE GE EQ NE OR AND LIKE GROUP HAVING ORDER ASC DESC IN

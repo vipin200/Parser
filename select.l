@@ -7,7 +7,7 @@
 %%
 
 [ \t\n]
-Select                              return SELECT;
+select                              return SELECT;
 distinct                            return DISTINCT;
 count|min|max|avg|sum|abs           return FUNC;
 from                                return FROM;

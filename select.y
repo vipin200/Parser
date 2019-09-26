@@ -6,17 +6,17 @@ int yylex();
 
 %}
 
-%token W SELECT DISTINCT AS FUNC FROM WHERE GROUP HAVING ORDER BY LIMIT ASC DESC NUM ID LITERAL
+%token W SELECT DISTINCT AS FUNC COUNT FROM WHERE GROUP HAVING ORDER BY LIMIT ASC DESC NUM ID LITERAL
 %token OR AND XOR NOT IS NUL ANY ALL LE GE NE IN BETWEEN LIKE REG LS RS DIV MOD EXISTS TRUE FALSE UNKNOWN
 %left '!'
-%left '-' '+' '~'
-%left ' ^ '
-%left ' * ' DIV MOD
-%left ' + ' ' - '
+%left UNARY '~'
+%left '^'
+%left '*' DIV MOD
+%left '+' '-'
 %left LS RS
-%left ' & '
-%left ' | '
-%left ' = ' ' < ' ' > ' LE GE EQ NE IS LIKE REG IN
+%left '&'
+%left '|'
+%left '=' '<' '>' LE GE EQ NE IS LIKE REG IN
 %left BETWEEN
 %left NOT
 %left AND
@@ -26,19 +26,14 @@ int yylex();
 
 %%
 
-    START: ST1 ';' W              {printf("INPUT ACCEPTED...\n");
-                                        exit(0);};
+    start: ST1 ';'          {
+                                    printf("INPUT ACCEPTED...\n");
+                                }
+        ;
 
-    ST: SELECT W attr FROM W tableList ST2
+    ST1: SELECT W attr FROM W tableList ST2
         | SELECT W DISTINCT W attr FROM W tableList ST2
-        | ST1
-        ;
-
-    ST1: SELECT W cond1 W
-        | SELECT W DISTINCT W cond1 W
-        | SELECT W cond1 W AS W ID W
-        | SELECT W DISTINCT W cond1 W AS W ID W
-        ;
+        
 
     ST2: WHERE W cond W ST3 
         | ST3 
@@ -66,22 +61,21 @@ int yylex();
     
     attr: attrList 
         | '*' W
-        | COUNT '( ' '*' ')' W 
-        | COUNT '(' '*' ')' W AS W ID W;
+        | COUNT  W 
+        | COUNT  W AS W ID W;
 
-    attrList: attrList ',' W attrList  
-            | FUNC '(' param ')' W 
-            | FUNC '(' DISTINCT W param ')' W 
+    attrList:attrList ',' W ID W  
+            | FUNC '(' ID ')' W 
+            | FUNC '(' DISTINCT W ID ')' W 
             | ID W
-            | FUNC '(' param ')' W AS W ID W
-            | FUNC '(' DISTINCT W param ')' W AS W ID W
-            | ID W AS W ID W ;
+            | FUNC '(' ID ')' W AS W ID W
+            | FUNC '(' DISTINCT W ID ')' W AS W ID W
+            | ID W AS W ID W 
+            ;
     
-    param: ID | cond2 ;
-    
-    tableList: tableList  ',' W tableList 
+    tableList:tableList ',' W ID W
             | ID W
-            |'(' ST ')' W AS W ID W;
+            |'(' ST1 ')' W AS W ID W;
     
     cond: cond W OR W cond 
         | cond W AND W cond 
@@ -100,19 +94,19 @@ int yylex();
              | bool_prim W IS W NOT W NUL
              | bool_prim W EQ W pred
              | bool_prim cmp_opr pred
-             | bool_prim cmp_opr ALL '(' ST ')'
-             | bool_prim cmp_opr ANY '(' ST ')'
+             | bool_prim cmp_opr ALL '(' ST1 ')'
+             | bool_prim cmp_opr ANY '(' ST1 ')'
              | pred
              ;            
 
-    cmp_opr: ' = ' | ' < ' | ' > ' | W LE W | W GE W | W NE W ;
+    cmp_opr: W '=' W | W '<' W | W '>' W | W LE W | W GE W | W NE W ;
 
     pred: bit_expr W pred1
         | bit_expr W NOT W pred1
         | bit_expr
         ;    
 
-    pred1: IN '(' ST ')'
+    pred1: IN '(' ST1 ')'
          | IN '(' ncond ')'
          | BETWEEN W bit_expr W AND W pred
          | LIKE W expr
@@ -121,30 +115,26 @@ int yylex();
 
     ncond: cond ',' cond | cond ;
 
-    bit_expr: bit_expr ' | ' bit_expr
-            | bit_expr ' & ' bit_expr
+    bit_expr: bit_expr W '|' W bit_expr
+            | bit_expr W '&' W bit_expr
             | bit_expr W LS W bit_expr
             | bit_expr W RS W bit_expr
-            | bit_expr ' + ' bit_expr
-            | bit_expr ' - ' bit_expr
-            | bit_expr ' * ' bit_expr
+            | bit_expr W '+' W bit_expr
+            | bit_expr W '-' W bit_expr
+            | bit_expr W '*' W bit_expr
             | bit_expr W DIV W bit_expr
             | bit_expr W MOD W bit_expr
-            | bit_expr ' ^ ' bit_expr
+            | bit_expr W '^' W bit_expr
             | expr
             ;
 
-    expr: 
-        | FUNC '(' expr1 ')'
-        | '(' ST ')'
-        | EXISTS '(' ST ')'
-        | expr1
-        ; 
+    expr: '(' ST1 ')'
+        | EXISTS '(' ST1 ')'
+        | ID 
+        | expr2 ;
 
-    expr1: ID | exp2 ;
-
-    expr2: '+' expr2 
-         | '-' expr2
+    expr2: '+' expr2  %prec UNARY
+         | '-' expr2  %prec UNARY
          | '~' expr2
          | '!' expr2
          | simple_expr
@@ -157,20 +147,6 @@ int yylex();
                | NUL
                ;
 
-    cond1: '(' ST ')'
-         | cond2
-         ;
-
-    cond2: cond2 opr cond2
-         | '(' cond2 ')'
-         | expr2;
-
-    
-    opr: cmp_opr
-        | ' + ' | ' - ' | ' * ' | W DIV W | W MOD W
-        | ' & ' | ' | ' | W LS W | W RS W | ' ^ '
-        | W AND W | W OR W | W XOR W 
-        ;
 %%
 
 int yyerror(char const *s)

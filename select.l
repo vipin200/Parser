@@ -6,11 +6,12 @@
 
 %%       
 
-[ \t\n]+                                    return W;
+[ \t\n]                                    return W;
 select                                      return SELECT;
 distinct                                    return DISTINCT;
 as                                          return AS;
-count|min|max|avg|sum|abs                   return FUNC;
+count"(*)"                                  return COUNT;
+count|min|max|avg|sum                       return FUNC;
 from                                        return FROM;
 where                                       return WHERE;
 group                                       return GROUP;

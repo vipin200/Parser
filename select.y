@@ -1,9 +1,12 @@
 %{
 #include <stdio.h>
-#include <stdlib.h>     
+#include <stdlib.h>  
+int yyerror(const char* s);
+int yylex();  
 
 %}
-%token ID NUM SELECT NEWLINE DISTINCT FROM WHERE LE GE EQ NE OR AND LIKE GROUP HAVING ORDER ASC DESC IN
+%token W SELECT DISTINCT AS FUNC FROM WHERE GROUP HAVING ORDER BY LIMIT ASC DESC NUM ID LITERAL
+%token OR AND XOR NOT IS NULL ANY ALL LE GE NE IN BETWEEN LIKE REG LS RS DIV MOD EXISTS
 %right '='
 %left AND OR
 %left '<' '>' LE GE EQ NE

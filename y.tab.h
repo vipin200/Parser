@@ -67,21 +67,21 @@
      ALL = 283,
      LE = 284,
      GE = 285,
-     NE = 286,
-     IN = 287,
-     BETWEEN = 288,
-     LIKE = 289,
-     REG = 290,
-     LS = 291,
-     RS = 292,
-     DIV = 293,
-     MOD = 294,
-     EXISTS = 295,
-     TRUE = 296,
-     FALSE = 297,
-     UNKNOWN = 298,
-     UNARY = 299,
-     EQ = 300
+     EQ = 286,
+     NE = 287,
+     IN = 288,
+     BETWEEN = 289,
+     LIKE = 290,
+     REG = 291,
+     LS = 292,
+     RS = 293,
+     DIV = 294,
+     MOD = 295,
+     EXISTS = 296,
+     TRUE = 297,
+     FALSE = 298,
+     UNKNOWN = 299,
+     UNARY = 300
    };
 #endif
 /* Tokens.  */
@@ -113,21 +113,21 @@
 #define ALL 283
 #define LE 284
 #define GE 285
-#define NE 286
-#define IN 287
-#define BETWEEN 288
-#define LIKE 289
-#define REG 290
-#define LS 291
-#define RS 292
-#define DIV 293
-#define MOD 294
-#define EXISTS 295
-#define TRUE 296
-#define FALSE 297
-#define UNKNOWN 298
-#define UNARY 299
-#define EQ 300
+#define EQ 286
+#define NE 287
+#define IN 288
+#define BETWEEN 289
+#define LIKE 290
+#define REG 291
+#define LS 292
+#define RS 293
+#define DIV 294
+#define MOD 295
+#define EXISTS 296
+#define TRUE 297
+#define FALSE 298
+#define UNKNOWN 299
+#define UNARY 300
 
 
 

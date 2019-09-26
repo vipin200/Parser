@@ -27,29 +27,58 @@ int yylex();
 
 %%
 
-    START: ST1 W ';' W              {printf("INPUT ACCEPTED...\n");
+    START: ST1 ';' W              {printf("INPUT ACCEPTED...\n");
                                         exit(0);};
 
-    ST1: SELECT ATTR FROM tableList ST2
-        | SELECT DISTINCT ATTR FROM tableList ST2
+    ST1: SELECT W attr FROM W tableList ST2 W
+        | SELECT W DISTINCT W attr FROM W tableList ST2 W
         ;
-    ST2    : WHERE COND ST3 | ST3 ;
-    
-    ST3    : GROUP attributeList ST4 | ST4 ;
-    
-    ST4    : HAVING COND ST5 | ST5 ;
 
-    ST5    : ORDER attributeList ST6 | ;
+    ST2: WHERE W COND ST3 W 
+        | ST3 
+        ;
     
-    ST6 : DESC | ASC | ;       
+    ST3: GROUP W BY W ID ST4 W
+        | GROUP W BY W NUM ST4 W
+        | ST4 
+        ;
     
-    ATTR  : attributeList | '*' | COUNT '(' '*' ')' |COUNT '(' '*' ')' AS ID    ;
+    ST4: HAVING COND ST5 
+        | ST5 
+        ;
 
-    attributeList : attributeList ',' attributeList | FUNC '(' ID ')' | ID |FUNC '(' ID ')' AS ID|ID AS ID ;
+    ST5: ORDER BY ID ST6 
+        | ORDER BY NUM ST6
+        | 
+        ;
     
-    tableList    : tableList ',' tableList | ID |'(' ST1 ')' AS ID;
+    ST6: DESC 
+        | ASC 
+        | 
+        ;       
     
-    COND : COND OR COND | COND AND COND | '(' COND ')' | ID OPR ANY '(' ST1 ')'
+    attr: attrList 
+        | '*' 
+        | COUNT '(' '*' ')' 
+        | COUNT '(' '*' ')' AS ID;
+
+    attrList: attrList ',' attrList 
+            | FUNC '(' ID ')' 
+            | FUNC '(' DISTINCT ID ')'
+            | ID 
+            | FUNC '(' ID ')' AS ID
+            | FUNC '(' DISTINCT ID ')' AS ID
+            | ID AS ID ;
+    
+    tableList: tableList ',' tableList 
+            | ID 
+            |'(' ST1 ')' AS ID;
+    
+    COND: COND OR COND 
+        | COND AND COND 
+        | COND XOR COND 
+              
+        | '(' COND ')' | ID OPR ANY '(' ST1 ')'
         |ID OPR ALL '(' ST1 ')' | NOT COND | COND OPR COND | ID |NUM |COND BETWEEN COND AND COND
         |EXISTS '(' ST1 ')' ;
 

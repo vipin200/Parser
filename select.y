@@ -6,9 +6,8 @@ int yylex();
 
 %}
 
-%token W SELECT DISTINCT AS FUNC COUNT FROM WHERE GROUP HAVING ORDER BY  
-%token ID LITERAL EXISTS TRUE FALSE UNKNOWN DIV MOD LIMIT ASC DESC NUM
-%token OR AND XOR NOT IS NUL ANY ALL LE GE NE IN BETWEEN LIKE REG LS RS  
+%token W SELECT DISTINCT AS FUNC COUNT FROM WHERE GROUP HAVING ORDER BY LIMIT ASC DESC NUM ID LITERAL
+%token OR AND XOR NOT IS NUL ANY ALL LE GE EQ NE IN BETWEEN LIKE REG LS RS DIV MOD EXISTS TRUE FALSE UNKNOWN
 %left '!'
 %left UNARY '~'
 %left '^'
@@ -22,13 +21,17 @@ int yylex();
 %left NOT
 %left AND
 %left OR
+%left ','
+%left '(' ')'
+%left W
 
 
 
 %%
 
-    start: ST1 ';'          {
+    start: ST1 ';'              {  
                                     printf("INPUT ACCEPTED...\n");
+                                    exit(1);
                                 }
         ;
 
@@ -55,8 +58,8 @@ int yylex();
         | 
         ;
 
-    ST7: DESC 
-        | ASC 
+    ST7: DESC W
+        | ASC W 
         | 
         ;       
     
@@ -65,7 +68,7 @@ int yylex();
         | COUNT  W 
         | COUNT  W AS W ID W;
 
-    attrList:attrList ',' W ID W  
+    attrList:attrList ',' W attrList  
             | FUNC '(' ID ')' W 
             | FUNC '(' DISTINCT W ID ')' W 
             | ID W
@@ -74,7 +77,7 @@ int yylex();
             | ID W AS W ID W 
             ;
     
-    tableList:tableList ',' W ID W
+    tableList:tableList ',' W tableList
             | ID W
             |'(' ST1 ')' W AS W ID W;
     
@@ -86,7 +89,7 @@ int yylex();
         | '(' cond ')'
         | bool_prim W IS W bool_val
         | bool_prim W IS W NOT W bool_val
-        | bool_prim
+        | bool_prim W
         ;
 
     bool_val: TRUE | FALSE | UNKNOWN ;
@@ -97,14 +100,14 @@ int yylex();
              | bool_prim cmp_opr pred
              | bool_prim cmp_opr ALL '(' ST1 ')'
              | bool_prim cmp_opr ANY '(' ST1 ')'
-             | pred
+             | pred W
              ;            
 
     cmp_opr: W '=' W | W '<' W | W '>' W | W LE W | W GE W | W NE W ;
 
     pred: bit_expr W pred1
         | bit_expr W NOT W pred1
-        | bit_expr
+        | bit_expr W
         ;    
 
     pred1: IN '(' ST1 ')'
@@ -126,19 +129,20 @@ int yylex();
             | bit_expr W DIV W bit_expr
             | bit_expr W MOD W bit_expr
             | bit_expr W '^' W bit_expr
-            | expr
+            | expr W
             ;
 
     expr: '(' ST1 ')'
         | EXISTS '(' ST1 ')'
         | ID 
-        | expr2 ;
+        | expr2 W
+        ;
 
     expr2: '+' expr2  %prec UNARY
          | '-' expr2  %prec UNARY
          | '~' expr2
          | '!' expr2
-         | simple_expr
+         | simple_expr W
          ; 
 
     simple_expr: NUM

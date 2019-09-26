@@ -29,8 +29,13 @@ int yylex();
     START: ST1 ';' W              {printf("INPUT ACCEPTED...\n");
                                         exit(0);};
 
-    ST1: SELECT W attr FROM W tableList ST2 W
+    ST: SELECT W attr FROM W tableList ST2 W
         | SELECT W DISTINCT W attr FROM W tableList ST2 W
+        | ST1
+        ;
+
+    ST1: SELECT cond1
+        | SELECT DISTINCT cond1
         ;
 
     ST2: WHERE W cond ST3 W 
@@ -62,16 +67,18 @@ int yylex();
         | COUNT '(' '*' ')' AS ID;
 
     attrList: attrList ',' attrList 
-            | FUNC '(' expr ')' 
-            | FUNC '(' DISTINCT expr ')'
+            | FUNC '(' param ')' 
+            | FUNC '(' DISTINCT param ')'
             | ID 
-            | FUNC '(' expr ')' AS ID
-            | FUNC '(' DISTINCT expr ')' AS ID
+            | FUNC '(' param ')' AS ID
+            | FUNC '(' DISTINCT param ')' AS ID
             | ID AS ID ;
+    
+    param: ID | cond2 ;
     
     tableList: tableList ',' tableList 
             | ID 
-            |'(' ST1 ')' AS ID;
+            |'(' ST ')' AS ID;
     
     cond: cond OR cond 
         | cond AND cond 
@@ -90,8 +97,8 @@ int yylex();
              | bool_prim IS NOT NUL
              | bool_prim EQ pred
              | bool_prim cmp_opr pred
-             | bool_prim cmp_opr ALL '(' ST1 ')'
-             | bool_prim cmp_opr ANY '(' ST1 ')'
+             | bool_prim cmp_opr ALL '(' ST ')'
+             | bool_prim cmp_opr ANY '(' ST ')'
              | pred
              ;            
 
@@ -102,7 +109,7 @@ int yylex();
         | bit_expr
         ;    
 
-    pred1: IN '(' ST1 ')'
+    pred1: IN '(' ST ')'
          | IN '(' ncond ')'
          | BETWEEN bit_expr AND pred
          | LIKE expr
@@ -123,26 +130,44 @@ int yylex();
             | bit_expr '^' bit_expr
             | expr
             ;
-            
-    expr: FUNC '(' expr1 ')'
-        | '(' ST1 ')'
-        | EXISTS '(' ST1 ')'
+
+    expr: 
+        | FUNC '(' expr1 ')'
+        | '(' ST ')'
+        | EXISTS '(' ST ')'
         | expr1
         ; 
 
-    expr1: '+' expr1 
-         | '-' expr1
-         | '~' expr1
-         | '!' expr1
+    expr1: ID | exp2 ;
+
+    expr2: '+' expr2 
+         | '-' expr2
+         | '~' expr2
+         | '!' expr2
+         | simple_expr
          ; 
 
-    simple_expr: ID
-               | NUM
+    simple_expr: NUM
                | LITERAL
                | TRUE
                | FALSE
                | NUL
                ;
+
+    cond1: '(' ST ')'
+         | cond2
+         ;
+
+    cond2: cond1 opr cond1
+         | '(' cond1 ')'
+         | expr2;
+
+    
+    opr: cmp_opr
+        | '+' | '-' | '*' | DIV | MOD
+        | '&' | '|' | LS | RS | '^'
+        | AND | OR | NOT | '!'
+        ;
 %%
 #include"lex.yy.c"
 #include<ctype.h>

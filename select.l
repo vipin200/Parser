@@ -6,7 +6,7 @@
 
 %%       
 
-[ \t\n]                                    return W;
+[ \t\n]                                     return W;
 select                                      return SELECT;
 distinct                                    return DISTINCT;
 as                                          return AS;

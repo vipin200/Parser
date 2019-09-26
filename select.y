@@ -169,10 +169,16 @@ int yylex();
         | AND | OR | NOT | '!'
         ;
 %%
-#include"lex.yy.c"
-#include<ctype.h>
-main()
+
+int yyerror(char const *s)
+{
+    printf("Invalid Statement : %s\n",s);
+    return 0;
+}
+
+int main()
 {
     printf("Enter the query:");
     yyparse();
+    return 1;
 }        

@@ -5,17 +5,32 @@ int yyerror(const char* s);
 int yylex();  
 
 %}
+
 %token W SELECT DISTINCT AS FUNC FROM WHERE GROUP HAVING ORDER BY LIMIT ASC DESC NUM ID LITERAL
 %token OR AND XOR NOT IS NULL ANY ALL LE GE NE IN BETWEEN LIKE REG LS RS DIV MOD EXISTS
-%right '='
-%left AND OR
-%left '<' '>' LE GE EQ NE
+%left '!'
+%left UMINUS '~'
+%left '^'
+%left '*' DIV MOD
+%left '+' '-'
+%left LS RS
+%left '&'
+%left '|'
+%left '=''<' '>' LE GE EQ NE IS LIKE REG IN
+%left BETWEEN
+%left NOT
+%left AND
+%left OR
+%right ASSIGNMENT
+
+
 
 %%
 
-    START  : ST1';'NEWLINE {printf("INPUT ACCEPTED...\n");exit(0);};
+    START: ST1 W ';' W              {printf("INPUT ACCEPTED...\n");
+                                        exit(0);};
 
-    ST1    : SELECT ATTR FROM tableList ST2
+    ST1: SELECT ATTR FROM tableList ST2
         | SELECT DISTINCT ATTR FROM tableList ST2
         ;
     ST2    : WHERE COND ST3 | ST3 ;

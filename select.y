@@ -7,23 +7,24 @@ int yylex();
 %}
 
 %token W SELECT DISTINCT AS FUNC COUNT FROM WHERE GROUP HAVING ORDER BY LIMIT ASC DESC NUM ID LITERAL
-%token OR AND XOR NOT IS NUL ANY ALL LE GE EQ NE IN BETWEEN LIKE REG LS RS DIV MOD EXISTS TRUE FALSE UNKNOWN
-%left '!'
-%left UNARY '~'
-%left '^'
-%left '*' DIV MOD
-%left '+' '-'
-%left LS RS
-%left '&'
-%left '|'
-%left '=' '<' '>' LE GE EQ NE IS LIKE REG IN
-%left BETWEEN
-%left NOT
-%left AND
-%left OR
+%token OR AND XOR NOT IS NUL ANY ALL LE GE EQ NE IN BETWEEN LIKE REG LS RS EXISTS TRUE FALSE UNKNOWN
+
 %left ','
 %left '(' ')'
 %left W
+%left OR
+%left AND
+%left NOT
+%left BETWEEN
+%left '=' '<' '>' LE GE EQ NE IS LIKE REG IN
+%left '|'
+%left '&'
+%left LS RS
+%left '+' '-'
+%left '*' '/' '%'
+%left '^'
+%left UNARY '~'
+%left '!'
 
 
 
@@ -37,7 +38,7 @@ int yylex();
 
     ST1: SELECT W attr FROM W tableList ST2
         | SELECT W DISTINCT W attr FROM W tableList ST2
-        
+        ;
 
     ST2: WHERE W cond W ST3 
         | ST3 
@@ -48,6 +49,7 @@ int yylex();
         ;
 
     ST4: ID ',' W ID | ID W
+    ;
 
     ST5: HAVING W cond W ST6 
         | ST6 
@@ -81,6 +83,7 @@ int yylex();
             | ID W
             |'(' ST1 ')' W AS W ID W;
     
+
     cond: cond W OR W cond 
         | cond W AND W cond 
         | cond W XOR W cond
@@ -126,8 +129,8 @@ int yylex();
             | bit_expr W '+' W bit_expr
             | bit_expr W '-' W bit_expr
             | bit_expr W '*' W bit_expr
-            | bit_expr W DIV W bit_expr
-            | bit_expr W MOD W bit_expr
+            | bit_expr W '/' W bit_expr
+            | bit_expr W '%' W bit_expr
             | bit_expr W '^' W bit_expr
             | expr W
             ;

@@ -51,7 +51,7 @@ int yylex();
 
     st4: st4 ',' st4 | ID st7 | INT st7 ; 
 
-    st5: HAVING expr st6 
+    st5: HAVING expr1 st6 
         | st6 
         ;
 
@@ -70,9 +70,7 @@ int yylex();
         ;
 
     attrList:attrList ','  attrList  
-            | FUNC '(' val ')'  alias 
-            | FUNC '(' DISTINCT  val ')'  alias 
-            | val  alias  
+            | expr1 alias  
             ;
 
     alias:AS ID | ;
@@ -142,6 +140,65 @@ int yylex();
         | ID
         | INT
         ;
+
+
+        
+
+    expr1: expr1 OR expr1
+        | expr1 XOR expr1
+        | expr1 AND expr1
+        | NOT expr1
+        | '(' expr1 ')'
+        | bool_prim1 IS BOOL
+        | bool_prim1 IS NOT BOOL
+        | bool_prim1
+        ;
+
+    bool_prim1:  bool_prim1 IS NUL
+        | bool_prim1 IS NOT NUL
+        | bool_prim1 CMP pred2
+        | bool_prim1 CMP ALL '(' st1 ')'
+        | bool_prim1 CMP ANY '(' st1 ')'
+        | pred2
+        ;
+
+    pred2: bit_expr1  pred3
+        | bit_expr1  NOT  pred3
+        | bit_expr1 
+        ;    
+
+    pred3: IN '(' st1 ')'
+        | IN '(' expr1_lst ')'
+        | BETWEEN  bit_expr1  AND  pred2      %prec BETWEEN 
+        | LIKE  simple_expr1
+        | REG  bit_expr1
+        ; 
+
+    expr1_lst: expr1 ',' expr1_lst | expr1 ;
+
+    bit_expr1: bit_expr1 '|' bit_expr1
+            | bit_expr1 '&' bit_expr1
+            | bit_expr1 LS bit_expr1
+            | bit_expr1 RS bit_expr1
+            | bit_expr1 '+' bit_expr1
+            | bit_expr1 '-' bit_expr1
+            | bit_expr1 '*' bit_expr1
+            | bit_expr1 DIV bit_expr1
+            | bit_expr1 MOD bit_expr1
+            | bit_expr1 '^' bit_expr1
+            | simple_expr1
+            ;
+
+    simple_expr1: '+' simple_expr1        %prec UMINUS
+                | '-' simple_expr1       %prec UMINUS
+                | '~' simple_expr1       %prec UMINUS
+                | '!' simple_expr1       %prec UMINUS
+                | '(' st1 ')'
+                | EXISTS '(' st1 ')'
+                | FUNC '(' val ')'
+                | FUNC '(' DISTINCT val ')'
+                | val
+                ;
 
 %%
 

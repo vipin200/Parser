@@ -1,8 +1,3 @@
-Terminals unused in grammar
-
-   LIMIT
-
-
 Grammar
 
     0 $accept: start $end
@@ -26,187 +21,191 @@ Grammar
    12    | st6
 
    13 st6: ORDER BY st4
-   14    | /* empty */
+   14    | st8
 
    15 st7: DESC
    16    | ASC
    17    | /* empty */
 
-   18 attr: attrList
-   19     | '*'
-   20     | COUNT alias
+   18 st8: LIMIT INT
+   19    | LIMIT INT ',' INT
+   20    | /* empty */
 
-   21 attrList: attrList ',' attrList
-   22         | expr1 alias
+   21 attr: attrList
+   22     | '*'
+   23     | COUNT alias
 
-   23 alias: AS ID
-   24      | /* empty */
+   24 attrList: attrList ',' attrList
+   25         | expr1 alias
 
-   25 tableList: tableList ',' tableList
-   26          | ID
-   27          | '(' st1 ')' alias
+   26 alias: AS ID
+   27      | /* empty */
 
-   28 expr: expr OR expr
-   29     | expr XOR expr
-   30     | expr AND expr
-   31     | NOT expr
-   32     | '(' expr ')'
-   33     | bool_prim IS BOOL
-   34     | bool_prim IS NOT BOOL
-   35     | bool_prim
+   28 tableList: tableList ',' tableList
+   29          | ID
+   30          | '(' st1 ')' alias
 
-   36 bool_prim: bool_prim IS NUL
-   37          | bool_prim IS NOT NUL
-   38          | bool_prim CMP pred
-   39          | bool_prim CMP ALL '(' st1 ')'
-   40          | bool_prim CMP ANY '(' st1 ')'
-   41          | pred
+   31 expr: expr OR expr
+   32     | expr XOR expr
+   33     | expr AND expr
+   34     | NOT expr
+   35     | '(' expr ')'
+   36     | bool_prim IS BOOL
+   37     | bool_prim IS NOT BOOL
+   38     | bool_prim
 
-   42 pred: bit_expr pred1
-   43     | bit_expr NOT pred1
-   44     | bit_expr
+   39 bool_prim: bool_prim IS NUL
+   40          | bool_prim IS NOT NUL
+   41          | bool_prim CMP pred
+   42          | bool_prim CMP ALL '(' st1 ')'
+   43          | bool_prim CMP ANY '(' st1 ')'
+   44          | pred
 
-   45 pred1: IN '(' st1 ')'
-   46      | IN '(' expr_lst ')'
-   47      | BETWEEN bit_expr AND pred
-   48      | LIKE simple_expr
-   49      | REG bit_expr
+   45 pred: bit_expr pred1
+   46     | bit_expr NOT pred1
+   47     | bit_expr
 
-   50 expr_lst: expr ',' expr_lst
-   51         | expr
+   48 pred1: IN '(' st1 ')'
+   49      | IN '(' expr_lst ')'
+   50      | BETWEEN bit_expr AND pred
+   51      | LIKE simple_expr
+   52      | REG bit_expr
 
-   52 bit_expr: bit_expr '|' bit_expr
-   53         | bit_expr '&' bit_expr
-   54         | bit_expr LS bit_expr
-   55         | bit_expr RS bit_expr
-   56         | bit_expr '+' bit_expr
-   57         | bit_expr '-' bit_expr
-   58         | bit_expr '*' bit_expr
-   59         | bit_expr DIV bit_expr
-   60         | bit_expr MOD bit_expr
-   61         | bit_expr '^' bit_expr
-   62         | simple_expr
+   53 expr_lst: expr ',' expr_lst
+   54         | expr
 
-   63 simple_expr: '+' simple_expr
-   64            | '-' simple_expr
-   65            | '~' simple_expr
-   66            | '!' simple_expr
-   67            | '(' st1 ')'
-   68            | EXISTS '(' st1 ')'
-   69            | val
+   55 bit_expr: bit_expr '|' bit_expr
+   56         | bit_expr '&' bit_expr
+   57         | bit_expr LS bit_expr
+   58         | bit_expr RS bit_expr
+   59         | bit_expr '+' bit_expr
+   60         | bit_expr '-' bit_expr
+   61         | bit_expr '*' bit_expr
+   62         | bit_expr DIV bit_expr
+   63         | bit_expr MOD bit_expr
+   64         | bit_expr '^' bit_expr
+   65         | simple_expr
 
-   70 val: FLOAT
-   71    | NUL
-   72    | LITERAL
-   73    | BOOL
-   74    | ID
-   75    | INT
+   66 simple_expr: '+' simple_expr
+   67            | '-' simple_expr
+   68            | '~' simple_expr
+   69            | '!' simple_expr
+   70            | '(' st1 ')'
+   71            | EXISTS '(' st1 ')'
+   72            | val
 
-   76 expr1: expr1 OR expr1
-   77      | expr1 XOR expr1
-   78      | expr1 AND expr1
-   79      | NOT expr1
-   80      | '(' expr1 ')'
-   81      | bool_prim1 IS BOOL
-   82      | bool_prim1 IS NOT BOOL
-   83      | bool_prim1
+   73 val: FLOAT
+   74    | NUL
+   75    | LITERAL
+   76    | BOOL
+   77    | ID
+   78    | INT
 
-   84 bool_prim1: bool_prim1 IS NUL
-   85           | bool_prim1 IS NOT NUL
-   86           | bool_prim1 CMP pred2
-   87           | bool_prim1 CMP ALL '(' st1 ')'
-   88           | bool_prim1 CMP ANY '(' st1 ')'
-   89           | pred2
+   79 expr1: expr1 OR expr1
+   80      | expr1 XOR expr1
+   81      | expr1 AND expr1
+   82      | NOT expr1
+   83      | '(' expr1 ')'
+   84      | bool_prim1 IS BOOL
+   85      | bool_prim1 IS NOT BOOL
+   86      | bool_prim1
 
-   90 pred2: bit_expr1 pred3
-   91      | bit_expr1 NOT pred3
-   92      | bit_expr1
+   87 bool_prim1: bool_prim1 IS NUL
+   88           | bool_prim1 IS NOT NUL
+   89           | bool_prim1 CMP pred2
+   90           | bool_prim1 CMP ALL '(' st1 ')'
+   91           | bool_prim1 CMP ANY '(' st1 ')'
+   92           | pred2
 
-   93 pred3: IN '(' st1 ')'
-   94      | IN '(' expr1_lst ')'
-   95      | BETWEEN bit_expr1 AND pred2
-   96      | LIKE simple_expr1
-   97      | REG bit_expr1
+   93 pred2: bit_expr1 pred3
+   94      | bit_expr1 NOT pred3
+   95      | bit_expr1
 
-   98 expr1_lst: expr1 ',' expr1_lst
-   99          | expr1
+   96 pred3: IN '(' st1 ')'
+   97      | IN '(' expr1_lst ')'
+   98      | BETWEEN bit_expr1 AND pred2
+   99      | LIKE simple_expr1
+  100      | REG bit_expr1
 
-  100 bit_expr1: bit_expr1 '|' bit_expr1
-  101          | bit_expr1 '&' bit_expr1
-  102          | bit_expr1 LS bit_expr1
-  103          | bit_expr1 RS bit_expr1
-  104          | bit_expr1 '+' bit_expr1
-  105          | bit_expr1 '-' bit_expr1
-  106          | bit_expr1 '*' bit_expr1
-  107          | bit_expr1 DIV bit_expr1
-  108          | bit_expr1 MOD bit_expr1
-  109          | bit_expr1 '^' bit_expr1
-  110          | simple_expr1
+  101 expr1_lst: expr1 ',' expr1_lst
+  102          | expr1
 
-  111 simple_expr1: '+' simple_expr1
-  112             | '-' simple_expr1
-  113             | '~' simple_expr1
-  114             | '!' simple_expr1
-  115             | '(' st1 ')'
-  116             | EXISTS '(' st1 ')'
-  117             | FUNC '(' val ')'
-  118             | FUNC '(' DISTINCT val ')'
-  119             | val
+  103 bit_expr1: bit_expr1 '|' bit_expr1
+  104          | bit_expr1 '&' bit_expr1
+  105          | bit_expr1 LS bit_expr1
+  106          | bit_expr1 RS bit_expr1
+  107          | bit_expr1 '+' bit_expr1
+  108          | bit_expr1 '-' bit_expr1
+  109          | bit_expr1 '*' bit_expr1
+  110          | bit_expr1 DIV bit_expr1
+  111          | bit_expr1 MOD bit_expr1
+  112          | bit_expr1 '^' bit_expr1
+  113          | simple_expr1
+
+  114 simple_expr1: '+' simple_expr1
+  115             | '-' simple_expr1
+  116             | '~' simple_expr1
+  117             | '!' simple_expr1
+  118             | '(' st1 ')'
+  119             | EXISTS '(' st1 ')'
+  120             | FUNC '(' val ')'
+  121             | FUNC '(' DISTINCT val ')'
+  122             | val
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'!' (33) 66 114
-'&' (38) 53 101
-'(' (40) 27 32 39 40 45 46 67 68 80 87 88 93 94 115 116 117 118
-')' (41) 27 32 39 40 45 46 67 68 80 87 88 93 94 115 116 117 118
-'*' (42) 19 58 106
-'+' (43) 56 63 104 111
-',' (44) 8 21 25 50 98
-'-' (45) 57 64 105 112
+'!' (33) 69 117
+'&' (38) 56 104
+'(' (40) 30 35 42 43 48 49 70 71 83 90 91 96 97 118 119 120 121
+')' (41) 30 35 42 43 48 49 70 71 83 90 91 96 97 118 119 120 121
+'*' (42) 22 61 109
+'+' (43) 59 66 107 114
+',' (44) 8 19 24 28 53 101
+'-' (45) 60 67 108 115
 ';' (59) 1
-'^' (94) 61 109
-'|' (124) 52 100
-'~' (126) 65 113
+'^' (94) 64 112
+'|' (124) 55 103
+'~' (126) 68 116
 error (256)
 SELECT (258) 2 3
-DISTINCT (259) 3 118
-AS (260) 23
-FUNC (261) 117 118
-COUNT (262) 20
+DISTINCT (259) 3 121
+AS (260) 26
+FUNC (261) 120 121
+COUNT (262) 23
 FROM (263) 2 3
 WHERE (264) 4
 GROUP (265) 6
 HAVING (266) 11
 ORDER (267) 13
 BY (268) 6 13
-LIMIT (269)
+LIMIT (269) 18 19
 ASC (270) 16
 DESC (271) 15
-ID (272) 9 23 26 74
-LITERAL (273) 72
-OR (274) 28 76
-AND (275) 30 47 78 95
-XOR (276) 29 77
-NOT (277) 31 34 37 43 79 82 85 91
-IS (278) 33 34 36 37 81 82 84 85
-NUL (279) 36 37 71 84 85
-ANY (280) 40 88
-ALL (281) 39 87
-CMP (282) 38 39 40 86 87 88
-IN (283) 45 46 93 94
-BETWEEN (284) 47 95
-LIKE (285) 48 96
-REG (286) 49 97
-LS (287) 54 102
-RS (288) 55 103
-DIV (289) 59 107
-MOD (290) 60 108
-EXISTS (291) 68 116
-BOOL (292) 33 34 73 81 82
-INT (293) 10 75
-FLOAT (294) 70
+ID (272) 9 26 29 77
+LITERAL (273) 75
+OR (274) 31 79
+AND (275) 33 50 81 98
+XOR (276) 32 80
+NOT (277) 34 37 40 46 82 85 88 94
+IS (278) 36 37 39 40 84 85 87 88
+NUL (279) 39 40 74 87 88
+ANY (280) 43 91
+ALL (281) 42 90
+CMP (282) 41 42 43 89 90 91
+IN (283) 48 49 96 97
+BETWEEN (284) 50 98
+LIKE (285) 51 99
+REG (286) 52 100
+LS (287) 57 105
+RS (288) 58 106
+DIV (289) 62 110
+MOD (290) 63 111
+EXISTS (291) 71 119
+BOOL (292) 36 37 76 84 85
+INT (293) 10 18 19 78
+FLOAT (294) 73
 UMINUS (295)
 
 
@@ -217,7 +216,7 @@ $accept (53)
 start (54)
     on left: 1, on right: 0
 st1 (55)
-    on left: 2 3, on right: 1 27 39 40 45 67 68 87 88 93 115 116
+    on left: 2 3, on right: 1 30 42 43 48 70 71 90 91 96 118 119
 st2 (56)
     on left: 4 5, on right: 2 3
 st3 (57)
@@ -230,49 +229,51 @@ st6 (60)
     on left: 13 14, on right: 11 12
 st7 (61)
     on left: 15 16 17, on right: 9 10
-attr (62)
-    on left: 18 19 20, on right: 2 3
-attrList (63)
-    on left: 21 22, on right: 18 21
-alias (64)
-    on left: 23 24, on right: 20 22 27
-tableList (65)
-    on left: 25 26 27, on right: 2 3 25
-expr (66)
-    on left: 28 29 30 31 32 33 34 35, on right: 4 28 29 30 31 32 50
-    51
-bool_prim (67)
-    on left: 36 37 38 39 40 41, on right: 33 34 35 36 37 38 39 40
-pred (68)
-    on left: 42 43 44, on right: 38 41 47
-pred1 (69)
-    on left: 45 46 47 48 49, on right: 42 43
-expr_lst (70)
-    on left: 50 51, on right: 46 50
-bit_expr (71)
-    on left: 52 53 54 55 56 57 58 59 60 61 62, on right: 42 43 44 47
-    49 52 53 54 55 56 57 58 59 60 61
-simple_expr (72)
-    on left: 63 64 65 66 67 68 69, on right: 48 62 63 64 65 66
-val (73)
-    on left: 70 71 72 73 74 75, on right: 69 117 118 119
-expr1 (74)
-    on left: 76 77 78 79 80 81 82 83, on right: 11 22 76 77 78 79 80
-    98 99
-bool_prim1 (75)
-    on left: 84 85 86 87 88 89, on right: 81 82 83 84 85 86 87 88
-pred2 (76)
-    on left: 90 91 92, on right: 86 89 95
-pred3 (77)
-    on left: 93 94 95 96 97, on right: 90 91
-expr1_lst (78)
-    on left: 98 99, on right: 94 98
-bit_expr1 (79)
-    on left: 100 101 102 103 104 105 106 107 108 109 110, on right:
-    90 91 92 95 97 100 101 102 103 104 105 106 107 108 109
-simple_expr1 (80)
-    on left: 111 112 113 114 115 116 117 118 119, on right: 96 110
-    111 112 113 114
+st8 (62)
+    on left: 18 19 20, on right: 14
+attr (63)
+    on left: 21 22 23, on right: 2 3
+attrList (64)
+    on left: 24 25, on right: 21 24
+alias (65)
+    on left: 26 27, on right: 23 25 30
+tableList (66)
+    on left: 28 29 30, on right: 2 3 28
+expr (67)
+    on left: 31 32 33 34 35 36 37 38, on right: 4 31 32 33 34 35 53
+    54
+bool_prim (68)
+    on left: 39 40 41 42 43 44, on right: 36 37 38 39 40 41 42 43
+pred (69)
+    on left: 45 46 47, on right: 41 44 50
+pred1 (70)
+    on left: 48 49 50 51 52, on right: 45 46
+expr_lst (71)
+    on left: 53 54, on right: 49 53
+bit_expr (72)
+    on left: 55 56 57 58 59 60 61 62 63 64 65, on right: 45 46 47 50
+    52 55 56 57 58 59 60 61 62 63 64
+simple_expr (73)
+    on left: 66 67 68 69 70 71 72, on right: 51 65 66 67 68 69
+val (74)
+    on left: 73 74 75 76 77 78, on right: 72 120 121 122
+expr1 (75)
+    on left: 79 80 81 82 83 84 85 86, on right: 11 25 79 80 81 82 83
+    101 102
+bool_prim1 (76)
+    on left: 87 88 89 90 91 92, on right: 84 85 86 87 88 89 90 91
+pred2 (77)
+    on left: 93 94 95, on right: 89 92 98
+pred3 (78)
+    on left: 96 97 98 99 100, on right: 93 94
+expr1_lst (79)
+    on left: 101 102, on right: 97 101
+bit_expr1 (80)
+    on left: 103 104 105 106 107 108 109 110 111 112 113, on right:
+    93 94 95 98 100 103 104 105 106 107 108 109 110 111 112
+simple_expr1 (81)
+    on left: 114 115 116 117 118 119 120 121 122, on right: 99 113
+    114 115 116 117
 
 
 state 0
@@ -365,40 +366,40 @@ state 4
 
 state 5
 
-  117 simple_expr1: FUNC . '(' val ')'
-  118             | FUNC . '(' DISTINCT val ')'
+  120 simple_expr1: FUNC . '(' val ')'
+  121             | FUNC . '(' DISTINCT val ')'
 
     '('  shift, and go to state 32
 
 
 state 6
 
-   20 attr: COUNT . alias
+   23 attr: COUNT . alias
 
     AS  shift, and go to state 33
 
-    $default  reduce using rule 24 (alias)
+    $default  reduce using rule 27 (alias)
 
     alias  go to state 34
 
 
 state 7
 
-   74 val: ID .
+   77 val: ID .
 
-    $default  reduce using rule 74 (val)
+    $default  reduce using rule 77 (val)
 
 
 state 8
 
-   72 val: LITERAL .
+   75 val: LITERAL .
 
-    $default  reduce using rule 72 (val)
+    $default  reduce using rule 75 (val)
 
 
 state 9
 
-   79 expr1: NOT . expr1
+   82 expr1: NOT . expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -425,42 +426,42 @@ state 9
 
 state 10
 
-   71 val: NUL .
+   74 val: NUL .
 
-    $default  reduce using rule 71 (val)
+    $default  reduce using rule 74 (val)
 
 
 state 11
 
-  116 simple_expr1: EXISTS . '(' st1 ')'
+  119 simple_expr1: EXISTS . '(' st1 ')'
 
     '('  shift, and go to state 36
 
 
 state 12
 
-   73 val: BOOL .
+   76 val: BOOL .
 
-    $default  reduce using rule 73 (val)
+    $default  reduce using rule 76 (val)
 
 
 state 13
 
-   75 val: INT .
+   78 val: INT .
 
-    $default  reduce using rule 75 (val)
+    $default  reduce using rule 78 (val)
 
 
 state 14
 
-   70 val: FLOAT .
+   73 val: FLOAT .
 
-    $default  reduce using rule 70 (val)
+    $default  reduce using rule 73 (val)
 
 
 state 15
 
-  111 simple_expr1: '+' . simple_expr1
+  114 simple_expr1: '+' . simple_expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -482,7 +483,7 @@ state 15
 
 state 16
 
-  112 simple_expr1: '-' . simple_expr1
+  115 simple_expr1: '-' . simple_expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -504,15 +505,15 @@ state 16
 
 state 17
 
-   19 attr: '*' .
+   22 attr: '*' .
 
-    $default  reduce using rule 19 (attr)
+    $default  reduce using rule 22 (attr)
 
 
 state 18
 
-   80 expr1: '(' . expr1 ')'
-  115 simple_expr1: '(' . st1 ')'
+   83 expr1: '(' . expr1 ')'
+  118 simple_expr1: '(' . st1 ')'
 
     SELECT   shift, and go to state 1
     FUNC     shift, and go to state 5
@@ -541,7 +542,7 @@ state 18
 
 state 19
 
-  113 simple_expr1: '~' . simple_expr1
+  116 simple_expr1: '~' . simple_expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -563,7 +564,7 @@ state 19
 
 state 20
 
-  114 simple_expr1: '!' . simple_expr1
+  117 simple_expr1: '!' . simple_expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -592,77 +593,77 @@ state 21
 
 state 22
 
-   18 attr: attrList .
-   21 attrList: attrList . ',' attrList
+   21 attr: attrList .
+   24 attrList: attrList . ',' attrList
 
     ','  shift, and go to state 45
 
-    $default  reduce using rule 18 (attr)
+    $default  reduce using rule 21 (attr)
 
 
 state 23
 
-  119 simple_expr1: val .
+  122 simple_expr1: val .
 
-    $default  reduce using rule 119 (simple_expr1)
+    $default  reduce using rule 122 (simple_expr1)
 
 
 state 24
 
-   22 attrList: expr1 . alias
-   76 expr1: expr1 . OR expr1
-   77      | expr1 . XOR expr1
-   78      | expr1 . AND expr1
+   25 attrList: expr1 . alias
+   79 expr1: expr1 . OR expr1
+   80      | expr1 . XOR expr1
+   81      | expr1 . AND expr1
 
     AS   shift, and go to state 33
     OR   shift, and go to state 46
     AND  shift, and go to state 47
     XOR  shift, and go to state 48
 
-    $default  reduce using rule 24 (alias)
+    $default  reduce using rule 27 (alias)
 
     alias  go to state 49
 
 
 state 25
 
-   81 expr1: bool_prim1 . IS BOOL
-   82      | bool_prim1 . IS NOT BOOL
-   83      | bool_prim1 .
-   84 bool_prim1: bool_prim1 . IS NUL
-   85           | bool_prim1 . IS NOT NUL
-   86           | bool_prim1 . CMP pred2
-   87           | bool_prim1 . CMP ALL '(' st1 ')'
-   88           | bool_prim1 . CMP ANY '(' st1 ')'
+   84 expr1: bool_prim1 . IS BOOL
+   85      | bool_prim1 . IS NOT BOOL
+   86      | bool_prim1 .
+   87 bool_prim1: bool_prim1 . IS NUL
+   88           | bool_prim1 . IS NOT NUL
+   89           | bool_prim1 . CMP pred2
+   90           | bool_prim1 . CMP ALL '(' st1 ')'
+   91           | bool_prim1 . CMP ANY '(' st1 ')'
 
     IS   shift, and go to state 50
     CMP  shift, and go to state 51
 
-    $default  reduce using rule 83 (expr1)
+    $default  reduce using rule 86 (expr1)
 
 
 state 26
 
-   89 bool_prim1: pred2 .
+   92 bool_prim1: pred2 .
 
-    $default  reduce using rule 89 (bool_prim1)
+    $default  reduce using rule 92 (bool_prim1)
 
 
 state 27
 
-   90 pred2: bit_expr1 . pred3
-   91      | bit_expr1 . NOT pred3
-   92      | bit_expr1 .
-  100 bit_expr1: bit_expr1 . '|' bit_expr1
-  101          | bit_expr1 . '&' bit_expr1
-  102          | bit_expr1 . LS bit_expr1
-  103          | bit_expr1 . RS bit_expr1
-  104          | bit_expr1 . '+' bit_expr1
-  105          | bit_expr1 . '-' bit_expr1
-  106          | bit_expr1 . '*' bit_expr1
-  107          | bit_expr1 . DIV bit_expr1
-  108          | bit_expr1 . MOD bit_expr1
-  109          | bit_expr1 . '^' bit_expr1
+   93 pred2: bit_expr1 . pred3
+   94      | bit_expr1 . NOT pred3
+   95      | bit_expr1 .
+  103 bit_expr1: bit_expr1 . '|' bit_expr1
+  104          | bit_expr1 . '&' bit_expr1
+  105          | bit_expr1 . LS bit_expr1
+  106          | bit_expr1 . RS bit_expr1
+  107          | bit_expr1 . '+' bit_expr1
+  108          | bit_expr1 . '-' bit_expr1
+  109          | bit_expr1 . '*' bit_expr1
+  110          | bit_expr1 . DIV bit_expr1
+  111          | bit_expr1 . MOD bit_expr1
+  112          | bit_expr1 . '^' bit_expr1
 
     NOT      shift, and go to state 52
     IN       shift, and go to state 53
@@ -680,16 +681,16 @@ state 27
     '*'      shift, and go to state 65
     '^'      shift, and go to state 66
 
-    $default  reduce using rule 92 (pred2)
+    $default  reduce using rule 95 (pred2)
 
     pred3  go to state 67
 
 
 state 28
 
-  110 bit_expr1: simple_expr1 .
+  113 bit_expr1: simple_expr1 .
 
-    $default  reduce using rule 110 (bit_expr1)
+    $default  reduce using rule 113 (bit_expr1)
 
 
 state 29
@@ -715,8 +716,8 @@ state 31
 
 state 32
 
-  117 simple_expr1: FUNC '(' . val ')'
-  118             | FUNC '(' . DISTINCT val ')'
+  120 simple_expr1: FUNC '(' . val ')'
+  121             | FUNC '(' . DISTINCT val ')'
 
     DISTINCT  shift, and go to state 69
     ID        shift, and go to state 7
@@ -731,31 +732,31 @@ state 32
 
 state 33
 
-   23 alias: AS . ID
+   26 alias: AS . ID
 
     ID  shift, and go to state 71
 
 
 state 34
 
-   20 attr: COUNT alias .
+   23 attr: COUNT alias .
 
-    $default  reduce using rule 20 (attr)
+    $default  reduce using rule 23 (attr)
 
 
 state 35
 
-   76 expr1: expr1 . OR expr1
-   77      | expr1 . XOR expr1
-   78      | expr1 . AND expr1
-   79      | NOT expr1 .
+   79 expr1: expr1 . OR expr1
+   80      | expr1 . XOR expr1
+   81      | expr1 . AND expr1
+   82      | NOT expr1 .
 
-    $default  reduce using rule 79 (expr1)
+    $default  reduce using rule 82 (expr1)
 
 
 state 36
 
-  116 simple_expr1: EXISTS '(' . st1 ')'
+  119 simple_expr1: EXISTS '(' . st1 ')'
 
     SELECT  shift, and go to state 1
 
@@ -764,7 +765,7 @@ state 36
 
 state 37
 
-  115 simple_expr1: '(' . st1 ')'
+  118 simple_expr1: '(' . st1 ')'
 
     SELECT  shift, and go to state 1
 
@@ -773,31 +774,31 @@ state 37
 
 state 38
 
-  111 simple_expr1: '+' simple_expr1 .
+  114 simple_expr1: '+' simple_expr1 .
 
-    $default  reduce using rule 111 (simple_expr1)
+    $default  reduce using rule 114 (simple_expr1)
 
 
 state 39
 
-  112 simple_expr1: '-' simple_expr1 .
+  115 simple_expr1: '-' simple_expr1 .
 
-    $default  reduce using rule 112 (simple_expr1)
+    $default  reduce using rule 115 (simple_expr1)
 
 
 state 40
 
-  115 simple_expr1: '(' st1 . ')'
+  118 simple_expr1: '(' st1 . ')'
 
     ')'  shift, and go to state 73
 
 
 state 41
 
-   76 expr1: expr1 . OR expr1
-   77      | expr1 . XOR expr1
-   78      | expr1 . AND expr1
-   80      | '(' expr1 . ')'
+   79 expr1: expr1 . OR expr1
+   80      | expr1 . XOR expr1
+   81      | expr1 . AND expr1
+   83      | '(' expr1 . ')'
 
     OR   shift, and go to state 46
     AND  shift, and go to state 47
@@ -807,16 +808,16 @@ state 41
 
 state 42
 
-  113 simple_expr1: '~' simple_expr1 .
+  116 simple_expr1: '~' simple_expr1 .
 
-    $default  reduce using rule 113 (simple_expr1)
+    $default  reduce using rule 116 (simple_expr1)
 
 
 state 43
 
-  114 simple_expr1: '!' simple_expr1 .
+  117 simple_expr1: '!' simple_expr1 .
 
-    $default  reduce using rule 114 (simple_expr1)
+    $default  reduce using rule 117 (simple_expr1)
 
 
 state 44
@@ -831,7 +832,7 @@ state 44
 
 state 45
 
-   21 attrList: attrList ',' . attrList
+   24 attrList: attrList ',' . attrList
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -859,7 +860,7 @@ state 45
 
 state 46
 
-   76 expr1: expr1 OR . expr1
+   79 expr1: expr1 OR . expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -886,7 +887,7 @@ state 46
 
 state 47
 
-   78 expr1: expr1 AND . expr1
+   81 expr1: expr1 AND . expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -913,7 +914,7 @@ state 47
 
 state 48
 
-   77 expr1: expr1 XOR . expr1
+   80 expr1: expr1 XOR . expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -940,17 +941,17 @@ state 48
 
 state 49
 
-   22 attrList: expr1 alias .
+   25 attrList: expr1 alias .
 
-    $default  reduce using rule 22 (attrList)
+    $default  reduce using rule 25 (attrList)
 
 
 state 50
 
-   81 expr1: bool_prim1 IS . BOOL
-   82      | bool_prim1 IS . NOT BOOL
-   84 bool_prim1: bool_prim1 IS . NUL
-   85           | bool_prim1 IS . NOT NUL
+   84 expr1: bool_prim1 IS . BOOL
+   85      | bool_prim1 IS . NOT BOOL
+   87 bool_prim1: bool_prim1 IS . NUL
+   88           | bool_prim1 IS . NOT NUL
 
     NOT   shift, and go to state 82
     NUL   shift, and go to state 83
@@ -959,9 +960,9 @@ state 50
 
 state 51
 
-   86 bool_prim1: bool_prim1 CMP . pred2
-   87           | bool_prim1 CMP . ALL '(' st1 ')'
-   88           | bool_prim1 CMP . ANY '(' st1 ')'
+   89 bool_prim1: bool_prim1 CMP . pred2
+   90           | bool_prim1 CMP . ALL '(' st1 ')'
+   91           | bool_prim1 CMP . ANY '(' st1 ')'
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -987,7 +988,7 @@ state 51
 
 state 52
 
-   91 pred2: bit_expr1 NOT . pred3
+   94 pred2: bit_expr1 NOT . pred3
 
     IN       shift, and go to state 53
     BETWEEN  shift, and go to state 54
@@ -999,15 +1000,15 @@ state 52
 
 state 53
 
-   93 pred3: IN . '(' st1 ')'
-   94      | IN . '(' expr1_lst ')'
+   96 pred3: IN . '(' st1 ')'
+   97      | IN . '(' expr1_lst ')'
 
     '('  shift, and go to state 89
 
 
 state 54
 
-   95 pred3: BETWEEN . bit_expr1 AND pred2
+   98 pred3: BETWEEN . bit_expr1 AND pred2
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -1030,7 +1031,7 @@ state 54
 
 state 55
 
-   96 pred3: LIKE . simple_expr1
+   99 pred3: LIKE . simple_expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -1052,7 +1053,7 @@ state 55
 
 state 56
 
-   97 pred3: REG . bit_expr1
+  100 pred3: REG . bit_expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -1075,7 +1076,7 @@ state 56
 
 state 57
 
-  102 bit_expr1: bit_expr1 LS . bit_expr1
+  105 bit_expr1: bit_expr1 LS . bit_expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -1098,7 +1099,7 @@ state 57
 
 state 58
 
-  103 bit_expr1: bit_expr1 RS . bit_expr1
+  106 bit_expr1: bit_expr1 RS . bit_expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -1121,7 +1122,7 @@ state 58
 
 state 59
 
-  107 bit_expr1: bit_expr1 DIV . bit_expr1
+  110 bit_expr1: bit_expr1 DIV . bit_expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -1144,7 +1145,7 @@ state 59
 
 state 60
 
-  108 bit_expr1: bit_expr1 MOD . bit_expr1
+  111 bit_expr1: bit_expr1 MOD . bit_expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -1167,7 +1168,7 @@ state 60
 
 state 61
 
-  100 bit_expr1: bit_expr1 '|' . bit_expr1
+  103 bit_expr1: bit_expr1 '|' . bit_expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -1190,7 +1191,7 @@ state 61
 
 state 62
 
-  101 bit_expr1: bit_expr1 '&' . bit_expr1
+  104 bit_expr1: bit_expr1 '&' . bit_expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -1213,7 +1214,7 @@ state 62
 
 state 63
 
-  104 bit_expr1: bit_expr1 '+' . bit_expr1
+  107 bit_expr1: bit_expr1 '+' . bit_expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -1236,7 +1237,7 @@ state 63
 
 state 64
 
-  105 bit_expr1: bit_expr1 '-' . bit_expr1
+  108 bit_expr1: bit_expr1 '-' . bit_expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -1259,7 +1260,7 @@ state 64
 
 state 65
 
-  106 bit_expr1: bit_expr1 '*' . bit_expr1
+  109 bit_expr1: bit_expr1 '*' . bit_expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -1282,7 +1283,7 @@ state 65
 
 state 66
 
-  109 bit_expr1: bit_expr1 '^' . bit_expr1
+  112 bit_expr1: bit_expr1 '^' . bit_expr1
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -1305,9 +1306,9 @@ state 66
 
 state 67
 
-   90 pred2: bit_expr1 pred3 .
+   93 pred2: bit_expr1 pred3 .
 
-    $default  reduce using rule 90 (pred2)
+    $default  reduce using rule 93 (pred2)
 
 
 state 68
@@ -1322,7 +1323,7 @@ state 68
 
 state 69
 
-  118 simple_expr1: FUNC '(' DISTINCT . val ')'
+  121 simple_expr1: FUNC '(' DISTINCT . val ')'
 
     ID       shift, and go to state 7
     LITERAL  shift, and go to state 8
@@ -1336,49 +1337,49 @@ state 69
 
 state 70
 
-  117 simple_expr1: FUNC '(' val . ')'
+  120 simple_expr1: FUNC '(' val . ')'
 
     ')'  shift, and go to state 105
 
 
 state 71
 
-   23 alias: AS ID .
+   26 alias: AS ID .
 
-    $default  reduce using rule 23 (alias)
+    $default  reduce using rule 26 (alias)
 
 
 state 72
 
-  116 simple_expr1: EXISTS '(' st1 . ')'
+  119 simple_expr1: EXISTS '(' st1 . ')'
 
     ')'  shift, and go to state 106
 
 
 state 73
 
-  115 simple_expr1: '(' st1 ')' .
+  118 simple_expr1: '(' st1 ')' .
 
-    $default  reduce using rule 115 (simple_expr1)
+    $default  reduce using rule 118 (simple_expr1)
 
 
 state 74
 
-   80 expr1: '(' expr1 ')' .
+   83 expr1: '(' expr1 ')' .
 
-    $default  reduce using rule 80 (expr1)
+    $default  reduce using rule 83 (expr1)
 
 
 state 75
 
-   26 tableList: ID .
+   29 tableList: ID .
 
-    $default  reduce using rule 26 (tableList)
+    $default  reduce using rule 29 (tableList)
 
 
 state 76
 
-   27 tableList: '(' . st1 ')' alias
+   30 tableList: '(' . st1 ')' alias
 
     SELECT  shift, and go to state 1
 
@@ -1388,120 +1389,122 @@ state 76
 state 77
 
     2 st1: SELECT attr FROM tableList . st2
-   25 tableList: tableList . ',' tableList
+   28 tableList: tableList . ',' tableList
 
     WHERE   shift, and go to state 108
     GROUP   shift, and go to state 109
     HAVING  shift, and go to state 110
     ORDER   shift, and go to state 111
-    ','     shift, and go to state 112
+    LIMIT   shift, and go to state 112
+    ','     shift, and go to state 113
 
-    $default  reduce using rule 14 (st6)
+    $default  reduce using rule 20 (st8)
 
-    st2  go to state 113
-    st3  go to state 114
-    st5  go to state 115
-    st6  go to state 116
+    st2  go to state 114
+    st3  go to state 115
+    st5  go to state 116
+    st6  go to state 117
+    st8  go to state 118
 
 
 state 78
 
-   21 attrList: attrList . ',' attrList
-   21         | attrList ',' attrList .
+   24 attrList: attrList . ',' attrList
+   24         | attrList ',' attrList .
 
-    $default  reduce using rule 21 (attrList)
+    $default  reduce using rule 24 (attrList)
 
 
 state 79
 
-   76 expr1: expr1 . OR expr1
-   76      | expr1 OR expr1 .
-   77      | expr1 . XOR expr1
-   78      | expr1 . AND expr1
+   79 expr1: expr1 . OR expr1
+   79      | expr1 OR expr1 .
+   80      | expr1 . XOR expr1
+   81      | expr1 . AND expr1
 
     AND  shift, and go to state 47
     XOR  shift, and go to state 48
 
-    $default  reduce using rule 76 (expr1)
+    $default  reduce using rule 79 (expr1)
 
 
 state 80
 
-   76 expr1: expr1 . OR expr1
-   77      | expr1 . XOR expr1
-   78      | expr1 . AND expr1
-   78      | expr1 AND expr1 .
-
-    $default  reduce using rule 78 (expr1)
-
-
-state 81
-
-   76 expr1: expr1 . OR expr1
-   77      | expr1 . XOR expr1
-   77      | expr1 XOR expr1 .
-   78      | expr1 . AND expr1
-
-    AND  shift, and go to state 47
-
-    $default  reduce using rule 77 (expr1)
-
-
-state 82
-
-   82 expr1: bool_prim1 IS NOT . BOOL
-   85 bool_prim1: bool_prim1 IS NOT . NUL
-
-    NUL   shift, and go to state 117
-    BOOL  shift, and go to state 118
-
-
-state 83
-
-   84 bool_prim1: bool_prim1 IS NUL .
-
-    $default  reduce using rule 84 (bool_prim1)
-
-
-state 84
-
-   81 expr1: bool_prim1 IS BOOL .
+   79 expr1: expr1 . OR expr1
+   80      | expr1 . XOR expr1
+   81      | expr1 . AND expr1
+   81      | expr1 AND expr1 .
 
     $default  reduce using rule 81 (expr1)
 
 
+state 81
+
+   79 expr1: expr1 . OR expr1
+   80      | expr1 . XOR expr1
+   80      | expr1 XOR expr1 .
+   81      | expr1 . AND expr1
+
+    AND  shift, and go to state 47
+
+    $default  reduce using rule 80 (expr1)
+
+
+state 82
+
+   85 expr1: bool_prim1 IS NOT . BOOL
+   88 bool_prim1: bool_prim1 IS NOT . NUL
+
+    NUL   shift, and go to state 119
+    BOOL  shift, and go to state 120
+
+
+state 83
+
+   87 bool_prim1: bool_prim1 IS NUL .
+
+    $default  reduce using rule 87 (bool_prim1)
+
+
+state 84
+
+   84 expr1: bool_prim1 IS BOOL .
+
+    $default  reduce using rule 84 (expr1)
+
+
 state 85
 
-   88 bool_prim1: bool_prim1 CMP ANY . '(' st1 ')'
+   91 bool_prim1: bool_prim1 CMP ANY . '(' st1 ')'
 
-    '('  shift, and go to state 119
+    '('  shift, and go to state 121
 
 
 state 86
 
-   87 bool_prim1: bool_prim1 CMP ALL . '(' st1 ')'
+   90 bool_prim1: bool_prim1 CMP ALL . '(' st1 ')'
 
-    '('  shift, and go to state 120
+    '('  shift, and go to state 122
 
 
 state 87
 
-   86 bool_prim1: bool_prim1 CMP pred2 .
+   89 bool_prim1: bool_prim1 CMP pred2 .
 
-    $default  reduce using rule 86 (bool_prim1)
+    $default  reduce using rule 89 (bool_prim1)
 
 
 state 88
 
-   91 pred2: bit_expr1 NOT pred3 .
+   94 pred2: bit_expr1 NOT pred3 .
 
-    $default  reduce using rule 91 (pred2)
+    $default  reduce using rule 94 (pred2)
 
 
 state 89
 
-   93 pred3: IN '(' . st1 ')'
-   94      | IN '(' . expr1_lst ')'
+   96 pred3: IN '(' . st1 ')'
+   97      | IN '(' . expr1_lst ')'
 
     SELECT   shift, and go to state 1
     FUNC     shift, and go to state 5
@@ -1519,31 +1522,31 @@ state 89
     '~'      shift, and go to state 19
     '!'      shift, and go to state 20
 
-    st1           go to state 121
+    st1           go to state 123
     val           go to state 23
-    expr1         go to state 122
+    expr1         go to state 124
     bool_prim1    go to state 25
     pred2         go to state 26
-    expr1_lst     go to state 123
+    expr1_lst     go to state 125
     bit_expr1     go to state 27
     simple_expr1  go to state 28
 
 
 state 90
 
-   95 pred3: BETWEEN bit_expr1 . AND pred2
-  100 bit_expr1: bit_expr1 . '|' bit_expr1
-  101          | bit_expr1 . '&' bit_expr1
-  102          | bit_expr1 . LS bit_expr1
-  103          | bit_expr1 . RS bit_expr1
-  104          | bit_expr1 . '+' bit_expr1
-  105          | bit_expr1 . '-' bit_expr1
-  106          | bit_expr1 . '*' bit_expr1
-  107          | bit_expr1 . DIV bit_expr1
-  108          | bit_expr1 . MOD bit_expr1
-  109          | bit_expr1 . '^' bit_expr1
+   98 pred3: BETWEEN bit_expr1 . AND pred2
+  103 bit_expr1: bit_expr1 . '|' bit_expr1
+  104          | bit_expr1 . '&' bit_expr1
+  105          | bit_expr1 . LS bit_expr1
+  106          | bit_expr1 . RS bit_expr1
+  107          | bit_expr1 . '+' bit_expr1
+  108          | bit_expr1 . '-' bit_expr1
+  109          | bit_expr1 . '*' bit_expr1
+  110          | bit_expr1 . DIV bit_expr1
+  111          | bit_expr1 . MOD bit_expr1
+  112          | bit_expr1 . '^' bit_expr1
 
-    AND  shift, and go to state 124
+    AND  shift, and go to state 126
     LS   shift, and go to state 57
     RS   shift, and go to state 58
     DIV  shift, and go to state 59
@@ -1558,24 +1561,24 @@ state 90
 
 state 91
 
-   96 pred3: LIKE simple_expr1 .
+   99 pred3: LIKE simple_expr1 .
 
-    $default  reduce using rule 96 (pred3)
+    $default  reduce using rule 99 (pred3)
 
 
 state 92
 
-   97 pred3: REG bit_expr1 .
-  100 bit_expr1: bit_expr1 . '|' bit_expr1
-  101          | bit_expr1 . '&' bit_expr1
-  102          | bit_expr1 . LS bit_expr1
-  103          | bit_expr1 . RS bit_expr1
-  104          | bit_expr1 . '+' bit_expr1
-  105          | bit_expr1 . '-' bit_expr1
-  106          | bit_expr1 . '*' bit_expr1
-  107          | bit_expr1 . DIV bit_expr1
-  108          | bit_expr1 . MOD bit_expr1
-  109          | bit_expr1 . '^' bit_expr1
+  100 pred3: REG bit_expr1 .
+  103 bit_expr1: bit_expr1 . '|' bit_expr1
+  104          | bit_expr1 . '&' bit_expr1
+  105          | bit_expr1 . LS bit_expr1
+  106          | bit_expr1 . RS bit_expr1
+  107          | bit_expr1 . '+' bit_expr1
+  108          | bit_expr1 . '-' bit_expr1
+  109          | bit_expr1 . '*' bit_expr1
+  110          | bit_expr1 . DIV bit_expr1
+  111          | bit_expr1 . MOD bit_expr1
+  112          | bit_expr1 . '^' bit_expr1
 
     LS   shift, and go to state 57
     RS   shift, and go to state 58
@@ -1588,22 +1591,22 @@ state 92
     '*'  shift, and go to state 65
     '^'  shift, and go to state 66
 
-    $default  reduce using rule 97 (pred3)
+    $default  reduce using rule 100 (pred3)
 
 
 state 93
 
-  100 bit_expr1: bit_expr1 . '|' bit_expr1
-  101          | bit_expr1 . '&' bit_expr1
-  102          | bit_expr1 . LS bit_expr1
-  102          | bit_expr1 LS bit_expr1 .
-  103          | bit_expr1 . RS bit_expr1
-  104          | bit_expr1 . '+' bit_expr1
-  105          | bit_expr1 . '-' bit_expr1
-  106          | bit_expr1 . '*' bit_expr1
-  107          | bit_expr1 . DIV bit_expr1
-  108          | bit_expr1 . MOD bit_expr1
-  109          | bit_expr1 . '^' bit_expr1
+  103 bit_expr1: bit_expr1 . '|' bit_expr1
+  104          | bit_expr1 . '&' bit_expr1
+  105          | bit_expr1 . LS bit_expr1
+  105          | bit_expr1 LS bit_expr1 .
+  106          | bit_expr1 . RS bit_expr1
+  107          | bit_expr1 . '+' bit_expr1
+  108          | bit_expr1 . '-' bit_expr1
+  109          | bit_expr1 . '*' bit_expr1
+  110          | bit_expr1 . DIV bit_expr1
+  111          | bit_expr1 . MOD bit_expr1
+  112          | bit_expr1 . '^' bit_expr1
 
     DIV  shift, and go to state 59
     MOD  shift, and go to state 60
@@ -1612,22 +1615,22 @@ state 93
     '*'  shift, and go to state 65
     '^'  shift, and go to state 66
 
-    $default  reduce using rule 102 (bit_expr1)
+    $default  reduce using rule 105 (bit_expr1)
 
 
 state 94
 
-  100 bit_expr1: bit_expr1 . '|' bit_expr1
-  101          | bit_expr1 . '&' bit_expr1
-  102          | bit_expr1 . LS bit_expr1
-  103          | bit_expr1 . RS bit_expr1
-  103          | bit_expr1 RS bit_expr1 .
-  104          | bit_expr1 . '+' bit_expr1
-  105          | bit_expr1 . '-' bit_expr1
-  106          | bit_expr1 . '*' bit_expr1
-  107          | bit_expr1 . DIV bit_expr1
-  108          | bit_expr1 . MOD bit_expr1
-  109          | bit_expr1 . '^' bit_expr1
+  103 bit_expr1: bit_expr1 . '|' bit_expr1
+  104          | bit_expr1 . '&' bit_expr1
+  105          | bit_expr1 . LS bit_expr1
+  106          | bit_expr1 . RS bit_expr1
+  106          | bit_expr1 RS bit_expr1 .
+  107          | bit_expr1 . '+' bit_expr1
+  108          | bit_expr1 . '-' bit_expr1
+  109          | bit_expr1 . '*' bit_expr1
+  110          | bit_expr1 . DIV bit_expr1
+  111          | bit_expr1 . MOD bit_expr1
+  112          | bit_expr1 . '^' bit_expr1
 
     DIV  shift, and go to state 59
     MOD  shift, and go to state 60
@@ -1636,60 +1639,60 @@ state 94
     '*'  shift, and go to state 65
     '^'  shift, and go to state 66
 
-    $default  reduce using rule 103 (bit_expr1)
+    $default  reduce using rule 106 (bit_expr1)
 
 
 state 95
 
-  100 bit_expr1: bit_expr1 . '|' bit_expr1
-  101          | bit_expr1 . '&' bit_expr1
-  102          | bit_expr1 . LS bit_expr1
-  103          | bit_expr1 . RS bit_expr1
-  104          | bit_expr1 . '+' bit_expr1
-  105          | bit_expr1 . '-' bit_expr1
-  106          | bit_expr1 . '*' bit_expr1
-  107          | bit_expr1 . DIV bit_expr1
-  107          | bit_expr1 DIV bit_expr1 .
-  108          | bit_expr1 . MOD bit_expr1
-  109          | bit_expr1 . '^' bit_expr1
+  103 bit_expr1: bit_expr1 . '|' bit_expr1
+  104          | bit_expr1 . '&' bit_expr1
+  105          | bit_expr1 . LS bit_expr1
+  106          | bit_expr1 . RS bit_expr1
+  107          | bit_expr1 . '+' bit_expr1
+  108          | bit_expr1 . '-' bit_expr1
+  109          | bit_expr1 . '*' bit_expr1
+  110          | bit_expr1 . DIV bit_expr1
+  110          | bit_expr1 DIV bit_expr1 .
+  111          | bit_expr1 . MOD bit_expr1
+  112          | bit_expr1 . '^' bit_expr1
 
     '^'  shift, and go to state 66
 
-    $default  reduce using rule 107 (bit_expr1)
+    $default  reduce using rule 110 (bit_expr1)
 
 
 state 96
 
-  100 bit_expr1: bit_expr1 . '|' bit_expr1
-  101          | bit_expr1 . '&' bit_expr1
-  102          | bit_expr1 . LS bit_expr1
-  103          | bit_expr1 . RS bit_expr1
-  104          | bit_expr1 . '+' bit_expr1
-  105          | bit_expr1 . '-' bit_expr1
-  106          | bit_expr1 . '*' bit_expr1
-  107          | bit_expr1 . DIV bit_expr1
-  108          | bit_expr1 . MOD bit_expr1
-  108          | bit_expr1 MOD bit_expr1 .
-  109          | bit_expr1 . '^' bit_expr1
+  103 bit_expr1: bit_expr1 . '|' bit_expr1
+  104          | bit_expr1 . '&' bit_expr1
+  105          | bit_expr1 . LS bit_expr1
+  106          | bit_expr1 . RS bit_expr1
+  107          | bit_expr1 . '+' bit_expr1
+  108          | bit_expr1 . '-' bit_expr1
+  109          | bit_expr1 . '*' bit_expr1
+  110          | bit_expr1 . DIV bit_expr1
+  111          | bit_expr1 . MOD bit_expr1
+  111          | bit_expr1 MOD bit_expr1 .
+  112          | bit_expr1 . '^' bit_expr1
 
     '^'  shift, and go to state 66
 
-    $default  reduce using rule 108 (bit_expr1)
+    $default  reduce using rule 111 (bit_expr1)
 
 
 state 97
 
-  100 bit_expr1: bit_expr1 . '|' bit_expr1
-  100          | bit_expr1 '|' bit_expr1 .
-  101          | bit_expr1 . '&' bit_expr1
-  102          | bit_expr1 . LS bit_expr1
-  103          | bit_expr1 . RS bit_expr1
-  104          | bit_expr1 . '+' bit_expr1
-  105          | bit_expr1 . '-' bit_expr1
-  106          | bit_expr1 . '*' bit_expr1
-  107          | bit_expr1 . DIV bit_expr1
-  108          | bit_expr1 . MOD bit_expr1
-  109          | bit_expr1 . '^' bit_expr1
+  103 bit_expr1: bit_expr1 . '|' bit_expr1
+  103          | bit_expr1 '|' bit_expr1 .
+  104          | bit_expr1 . '&' bit_expr1
+  105          | bit_expr1 . LS bit_expr1
+  106          | bit_expr1 . RS bit_expr1
+  107          | bit_expr1 . '+' bit_expr1
+  108          | bit_expr1 . '-' bit_expr1
+  109          | bit_expr1 . '*' bit_expr1
+  110          | bit_expr1 . DIV bit_expr1
+  111          | bit_expr1 . MOD bit_expr1
+  112          | bit_expr1 . '^' bit_expr1
 
     LS   shift, and go to state 57
     RS   shift, and go to state 58
@@ -1701,22 +1704,22 @@ state 97
     '*'  shift, and go to state 65
     '^'  shift, and go to state 66
 
-    $default  reduce using rule 100 (bit_expr1)
+    $default  reduce using rule 103 (bit_expr1)
 
 
 state 98
 
-  100 bit_expr1: bit_expr1 . '|' bit_expr1
-  101          | bit_expr1 . '&' bit_expr1
-  101          | bit_expr1 '&' bit_expr1 .
-  102          | bit_expr1 . LS bit_expr1
-  103          | bit_expr1 . RS bit_expr1
-  104          | bit_expr1 . '+' bit_expr1
-  105          | bit_expr1 . '-' bit_expr1
-  106          | bit_expr1 . '*' bit_expr1
-  107          | bit_expr1 . DIV bit_expr1
-  108          | bit_expr1 . MOD bit_expr1
-  109          | bit_expr1 . '^' bit_expr1
+  103 bit_expr1: bit_expr1 . '|' bit_expr1
+  104          | bit_expr1 . '&' bit_expr1
+  104          | bit_expr1 '&' bit_expr1 .
+  105          | bit_expr1 . LS bit_expr1
+  106          | bit_expr1 . RS bit_expr1
+  107          | bit_expr1 . '+' bit_expr1
+  108          | bit_expr1 . '-' bit_expr1
+  109          | bit_expr1 . '*' bit_expr1
+  110          | bit_expr1 . DIV bit_expr1
+  111          | bit_expr1 . MOD bit_expr1
+  112          | bit_expr1 . '^' bit_expr1
 
     LS   shift, and go to state 57
     RS   shift, and go to state 58
@@ -1727,134 +1730,136 @@ state 98
     '*'  shift, and go to state 65
     '^'  shift, and go to state 66
 
-    $default  reduce using rule 101 (bit_expr1)
+    $default  reduce using rule 104 (bit_expr1)
 
 
 state 99
 
-  100 bit_expr1: bit_expr1 . '|' bit_expr1
-  101          | bit_expr1 . '&' bit_expr1
-  102          | bit_expr1 . LS bit_expr1
-  103          | bit_expr1 . RS bit_expr1
-  104          | bit_expr1 . '+' bit_expr1
-  104          | bit_expr1 '+' bit_expr1 .
-  105          | bit_expr1 . '-' bit_expr1
-  106          | bit_expr1 . '*' bit_expr1
-  107          | bit_expr1 . DIV bit_expr1
-  108          | bit_expr1 . MOD bit_expr1
-  109          | bit_expr1 . '^' bit_expr1
+  103 bit_expr1: bit_expr1 . '|' bit_expr1
+  104          | bit_expr1 . '&' bit_expr1
+  105          | bit_expr1 . LS bit_expr1
+  106          | bit_expr1 . RS bit_expr1
+  107          | bit_expr1 . '+' bit_expr1
+  107          | bit_expr1 '+' bit_expr1 .
+  108          | bit_expr1 . '-' bit_expr1
+  109          | bit_expr1 . '*' bit_expr1
+  110          | bit_expr1 . DIV bit_expr1
+  111          | bit_expr1 . MOD bit_expr1
+  112          | bit_expr1 . '^' bit_expr1
 
     DIV  shift, and go to state 59
     MOD  shift, and go to state 60
     '*'  shift, and go to state 65
     '^'  shift, and go to state 66
 
-    $default  reduce using rule 104 (bit_expr1)
+    $default  reduce using rule 107 (bit_expr1)
 
 
 state 100
 
-  100 bit_expr1: bit_expr1 . '|' bit_expr1
-  101          | bit_expr1 . '&' bit_expr1
-  102          | bit_expr1 . LS bit_expr1
-  103          | bit_expr1 . RS bit_expr1
-  104          | bit_expr1 . '+' bit_expr1
-  105          | bit_expr1 . '-' bit_expr1
-  105          | bit_expr1 '-' bit_expr1 .
-  106          | bit_expr1 . '*' bit_expr1
-  107          | bit_expr1 . DIV bit_expr1
-  108          | bit_expr1 . MOD bit_expr1
-  109          | bit_expr1 . '^' bit_expr1
+  103 bit_expr1: bit_expr1 . '|' bit_expr1
+  104          | bit_expr1 . '&' bit_expr1
+  105          | bit_expr1 . LS bit_expr1
+  106          | bit_expr1 . RS bit_expr1
+  107          | bit_expr1 . '+' bit_expr1
+  108          | bit_expr1 . '-' bit_expr1
+  108          | bit_expr1 '-' bit_expr1 .
+  109          | bit_expr1 . '*' bit_expr1
+  110          | bit_expr1 . DIV bit_expr1
+  111          | bit_expr1 . MOD bit_expr1
+  112          | bit_expr1 . '^' bit_expr1
 
     DIV  shift, and go to state 59
     MOD  shift, and go to state 60
     '*'  shift, and go to state 65
     '^'  shift, and go to state 66
 
-    $default  reduce using rule 105 (bit_expr1)
+    $default  reduce using rule 108 (bit_expr1)
 
 
 state 101
 
-  100 bit_expr1: bit_expr1 . '|' bit_expr1
-  101          | bit_expr1 . '&' bit_expr1
-  102          | bit_expr1 . LS bit_expr1
-  103          | bit_expr1 . RS bit_expr1
-  104          | bit_expr1 . '+' bit_expr1
-  105          | bit_expr1 . '-' bit_expr1
-  106          | bit_expr1 . '*' bit_expr1
-  106          | bit_expr1 '*' bit_expr1 .
-  107          | bit_expr1 . DIV bit_expr1
-  108          | bit_expr1 . MOD bit_expr1
-  109          | bit_expr1 . '^' bit_expr1
+  103 bit_expr1: bit_expr1 . '|' bit_expr1
+  104          | bit_expr1 . '&' bit_expr1
+  105          | bit_expr1 . LS bit_expr1
+  106          | bit_expr1 . RS bit_expr1
+  107          | bit_expr1 . '+' bit_expr1
+  108          | bit_expr1 . '-' bit_expr1
+  109          | bit_expr1 . '*' bit_expr1
+  109          | bit_expr1 '*' bit_expr1 .
+  110          | bit_expr1 . DIV bit_expr1
+  111          | bit_expr1 . MOD bit_expr1
+  112          | bit_expr1 . '^' bit_expr1
 
     '^'  shift, and go to state 66
 
-    $default  reduce using rule 106 (bit_expr1)
+    $default  reduce using rule 109 (bit_expr1)
 
 
 state 102
 
-  100 bit_expr1: bit_expr1 . '|' bit_expr1
-  101          | bit_expr1 . '&' bit_expr1
-  102          | bit_expr1 . LS bit_expr1
-  103          | bit_expr1 . RS bit_expr1
-  104          | bit_expr1 . '+' bit_expr1
-  105          | bit_expr1 . '-' bit_expr1
-  106          | bit_expr1 . '*' bit_expr1
-  107          | bit_expr1 . DIV bit_expr1
-  108          | bit_expr1 . MOD bit_expr1
-  109          | bit_expr1 . '^' bit_expr1
-  109          | bit_expr1 '^' bit_expr1 .
+  103 bit_expr1: bit_expr1 . '|' bit_expr1
+  104          | bit_expr1 . '&' bit_expr1
+  105          | bit_expr1 . LS bit_expr1
+  106          | bit_expr1 . RS bit_expr1
+  107          | bit_expr1 . '+' bit_expr1
+  108          | bit_expr1 . '-' bit_expr1
+  109          | bit_expr1 . '*' bit_expr1
+  110          | bit_expr1 . DIV bit_expr1
+  111          | bit_expr1 . MOD bit_expr1
+  112          | bit_expr1 . '^' bit_expr1
+  112          | bit_expr1 '^' bit_expr1 .
 
-    $default  reduce using rule 109 (bit_expr1)
+    $default  reduce using rule 112 (bit_expr1)
 
 
 state 103
 
     3 st1: SELECT DISTINCT attr FROM tableList . st2
-   25 tableList: tableList . ',' tableList
+   28 tableList: tableList . ',' tableList
 
     WHERE   shift, and go to state 108
     GROUP   shift, and go to state 109
     HAVING  shift, and go to state 110
     ORDER   shift, and go to state 111
-    ','     shift, and go to state 112
+    LIMIT   shift, and go to state 112
+    ','     shift, and go to state 113
 
-    $default  reduce using rule 14 (st6)
+    $default  reduce using rule 20 (st8)
 
-    st2  go to state 125
-    st3  go to state 114
-    st5  go to state 115
-    st6  go to state 116
+    st2  go to state 127
+    st3  go to state 115
+    st5  go to state 116
+    st6  go to state 117
+    st8  go to state 118
 
 
 state 104
 
-  118 simple_expr1: FUNC '(' DISTINCT val . ')'
+  121 simple_expr1: FUNC '(' DISTINCT val . ')'
 
-    ')'  shift, and go to state 126
+    ')'  shift, and go to state 128
 
 
 state 105
 
-  117 simple_expr1: FUNC '(' val ')' .
+  120 simple_expr1: FUNC '(' val ')' .
 
-    $default  reduce using rule 117 (simple_expr1)
+    $default  reduce using rule 120 (simple_expr1)
 
 
 state 106
 
-  116 simple_expr1: EXISTS '(' st1 ')' .
+  119 simple_expr1: EXISTS '(' st1 ')' .
 
-    $default  reduce using rule 116 (simple_expr1)
+    $default  reduce using rule 119 (simple_expr1)
 
 
 state 107
 
-   27 tableList: '(' st1 . ')' alias
+   30 tableList: '(' st1 . ')' alias
 
-    ')'  shift, and go to state 127
+    ')'  shift, and go to state 129
 
 
 state 108
@@ -1863,31 +1868,31 @@ state 108
 
     ID       shift, and go to state 7
     LITERAL  shift, and go to state 8
-    NOT      shift, and go to state 128
+    NOT      shift, and go to state 130
     NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
+    EXISTS   shift, and go to state 131
     BOOL     shift, and go to state 12
     INT      shift, and go to state 13
     FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 132
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 134
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    expr         go to state 135
-    bool_prim    go to state 136
-    pred         go to state 137
-    bit_expr     go to state 138
-    simple_expr  go to state 139
-    val          go to state 140
+    expr         go to state 137
+    bool_prim    go to state 138
+    pred         go to state 139
+    bit_expr     go to state 140
+    simple_expr  go to state 141
+    val          go to state 142
 
 
 state 109
 
     6 st3: GROUP . BY st4 st5
 
-    BY  shift, and go to state 141
+    BY  shift, and go to state 143
 
 
 state 110
@@ -1910,7 +1915,7 @@ state 110
     '!'      shift, and go to state 20
 
     val           go to state 23
-    expr1         go to state 142
+    expr1         go to state 144
     bool_prim1    go to state 25
     pred2         go to state 26
     bit_expr1     go to state 27
@@ -1921,112 +1926,127 @@ state 111
 
    13 st6: ORDER . BY st4
 
-    BY  shift, and go to state 143
+    BY  shift, and go to state 145
 
 
 state 112
 
-   25 tableList: tableList ',' . tableList
+   18 st8: LIMIT . INT
+   19    | LIMIT . INT ',' INT
+
+    INT  shift, and go to state 146
+
+
+state 113
+
+   28 tableList: tableList ',' . tableList
 
     ID   shift, and go to state 75
     '('  shift, and go to state 76
 
-    tableList  go to state 144
+    tableList  go to state 147
 
 
-state 113
+state 114
 
     2 st1: SELECT attr FROM tableList st2 .
 
     $default  reduce using rule 2 (st1)
 
 
-state 114
+state 115
 
     5 st2: st3 .
 
     $default  reduce using rule 5 (st2)
 
 
-state 115
+state 116
 
     7 st3: st5 .
 
     $default  reduce using rule 7 (st3)
 
 
-state 116
+state 117
 
    12 st5: st6 .
 
     $default  reduce using rule 12 (st5)
 
 
-state 117
-
-   85 bool_prim1: bool_prim1 IS NOT NUL .
-
-    $default  reduce using rule 85 (bool_prim1)
-
-
 state 118
 
-   82 expr1: bool_prim1 IS NOT BOOL .
+   14 st6: st8 .
 
-    $default  reduce using rule 82 (expr1)
+    $default  reduce using rule 14 (st6)
 
 
 state 119
 
-   88 bool_prim1: bool_prim1 CMP ANY '(' . st1 ')'
+   88 bool_prim1: bool_prim1 IS NOT NUL .
 
-    SELECT  shift, and go to state 1
-
-    st1  go to state 145
+    $default  reduce using rule 88 (bool_prim1)
 
 
 state 120
 
-   87 bool_prim1: bool_prim1 CMP ALL '(' . st1 ')'
+   85 expr1: bool_prim1 IS NOT BOOL .
 
-    SELECT  shift, and go to state 1
-
-    st1  go to state 146
+    $default  reduce using rule 85 (expr1)
 
 
 state 121
 
-   93 pred3: IN '(' st1 . ')'
+   91 bool_prim1: bool_prim1 CMP ANY '(' . st1 ')'
 
-    ')'  shift, and go to state 147
+    SELECT  shift, and go to state 1
+
+    st1  go to state 148
 
 
 state 122
 
-   76 expr1: expr1 . OR expr1
-   77      | expr1 . XOR expr1
-   78      | expr1 . AND expr1
-   98 expr1_lst: expr1 . ',' expr1_lst
-   99          | expr1 .
+   90 bool_prim1: bool_prim1 CMP ALL '(' . st1 ')'
 
-    OR   shift, and go to state 46
-    AND  shift, and go to state 47
-    XOR  shift, and go to state 48
-    ','  shift, and go to state 148
+    SELECT  shift, and go to state 1
 
-    $default  reduce using rule 99 (expr1_lst)
+    st1  go to state 149
 
 
 state 123
 
-   94 pred3: IN '(' expr1_lst . ')'
+   96 pred3: IN '(' st1 . ')'
 
-    ')'  shift, and go to state 149
+    ')'  shift, and go to state 150
 
 
 state 124
 
-   95 pred3: BETWEEN bit_expr1 AND . pred2
+   79 expr1: expr1 . OR expr1
+   80      | expr1 . XOR expr1
+   81      | expr1 . AND expr1
+  101 expr1_lst: expr1 . ',' expr1_lst
+  102          | expr1 .
+
+    OR   shift, and go to state 46
+    AND  shift, and go to state 47
+    XOR  shift, and go to state 48
+    ','  shift, and go to state 151
+
+    $default  reduce using rule 102 (expr1_lst)
+
+
+state 125
+
+   97 pred3: IN '(' expr1_lst . ')'
+
+    ')'  shift, and go to state 152
+
+
+state 126
+
+   98 pred3: BETWEEN bit_expr1 AND . pred2
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -2043,347 +2063,361 @@ state 124
     '!'      shift, and go to state 20
 
     val           go to state 23
-    pred2         go to state 150
+    pred2         go to state 153
     bit_expr1     go to state 27
     simple_expr1  go to state 28
 
 
-state 125
+state 127
 
     3 st1: SELECT DISTINCT attr FROM tableList st2 .
 
     $default  reduce using rule 3 (st1)
 
 
-state 126
-
-  118 simple_expr1: FUNC '(' DISTINCT val ')' .
-
-    $default  reduce using rule 118 (simple_expr1)
-
-
-state 127
-
-   27 tableList: '(' st1 ')' . alias
-
-    AS  shift, and go to state 33
-
-    $default  reduce using rule 24 (alias)
-
-    alias  go to state 151
-
-
 state 128
 
-   31 expr: NOT . expr
+  121 simple_expr1: FUNC '(' DISTINCT val ')' .
 
-    ID       shift, and go to state 7
-    LITERAL  shift, and go to state 8
-    NOT      shift, and go to state 128
-    NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
-    BOOL     shift, and go to state 12
-    INT      shift, and go to state 13
-    FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 132
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
-
-    expr         go to state 152
-    bool_prim    go to state 136
-    pred         go to state 137
-    bit_expr     go to state 138
-    simple_expr  go to state 139
-    val          go to state 140
+    $default  reduce using rule 121 (simple_expr1)
 
 
 state 129
 
-   68 simple_expr: EXISTS . '(' st1 ')'
+   30 tableList: '(' st1 ')' . alias
 
-    '('  shift, and go to state 153
+    AS  shift, and go to state 33
+
+    $default  reduce using rule 27 (alias)
+
+    alias  go to state 154
 
 
 state 130
 
-   63 simple_expr: '+' . simple_expr
+   34 expr: NOT . expr
 
     ID       shift, and go to state 7
     LITERAL  shift, and go to state 8
+    NOT      shift, and go to state 130
     NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
+    EXISTS   shift, and go to state 131
     BOOL     shift, and go to state 12
     INT      shift, and go to state 13
     FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 154
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 134
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    simple_expr  go to state 155
-    val          go to state 140
+    expr         go to state 155
+    bool_prim    go to state 138
+    pred         go to state 139
+    bit_expr     go to state 140
+    simple_expr  go to state 141
+    val          go to state 142
 
 
 state 131
 
-   64 simple_expr: '-' . simple_expr
+   71 simple_expr: EXISTS . '(' st1 ')'
 
-    ID       shift, and go to state 7
-    LITERAL  shift, and go to state 8
-    NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
-    BOOL     shift, and go to state 12
-    INT      shift, and go to state 13
-    FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 154
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
-
-    simple_expr  go to state 156
-    val          go to state 140
+    '('  shift, and go to state 156
 
 
 state 132
 
-   32 expr: '(' . expr ')'
-   67 simple_expr: '(' . st1 ')'
+   66 simple_expr: '+' . simple_expr
 
-    SELECT   shift, and go to state 1
     ID       shift, and go to state 7
     LITERAL  shift, and go to state 8
-    NOT      shift, and go to state 128
     NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
+    EXISTS   shift, and go to state 131
     BOOL     shift, and go to state 12
     INT      shift, and go to state 13
     FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 132
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 157
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    st1          go to state 157
-    expr         go to state 158
-    bool_prim    go to state 136
-    pred         go to state 137
-    bit_expr     go to state 138
-    simple_expr  go to state 139
-    val          go to state 140
+    simple_expr  go to state 158
+    val          go to state 142
 
 
 state 133
 
-   65 simple_expr: '~' . simple_expr
+   67 simple_expr: '-' . simple_expr
 
     ID       shift, and go to state 7
     LITERAL  shift, and go to state 8
     NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
+    EXISTS   shift, and go to state 131
     BOOL     shift, and go to state 12
     INT      shift, and go to state 13
     FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 154
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 157
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
     simple_expr  go to state 159
-    val          go to state 140
+    val          go to state 142
 
 
 state 134
 
-   66 simple_expr: '!' . simple_expr
+   35 expr: '(' . expr ')'
+   70 simple_expr: '(' . st1 ')'
 
+    SELECT   shift, and go to state 1
     ID       shift, and go to state 7
     LITERAL  shift, and go to state 8
+    NOT      shift, and go to state 130
     NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
+    EXISTS   shift, and go to state 131
     BOOL     shift, and go to state 12
     INT      shift, and go to state 13
     FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 154
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 134
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    simple_expr  go to state 160
-    val          go to state 140
+    st1          go to state 160
+    expr         go to state 161
+    bool_prim    go to state 138
+    pred         go to state 139
+    bit_expr     go to state 140
+    simple_expr  go to state 141
+    val          go to state 142
 
 
 state 135
 
-    4 st2: WHERE expr . st3
-   28 expr: expr . OR expr
-   29     | expr . XOR expr
-   30     | expr . AND expr
+   68 simple_expr: '~' . simple_expr
 
-    GROUP   shift, and go to state 109
-    HAVING  shift, and go to state 110
-    ORDER   shift, and go to state 111
-    OR      shift, and go to state 161
-    AND     shift, and go to state 162
-    XOR     shift, and go to state 163
+    ID       shift, and go to state 7
+    LITERAL  shift, and go to state 8
+    NUL      shift, and go to state 10
+    EXISTS   shift, and go to state 131
+    BOOL     shift, and go to state 12
+    INT      shift, and go to state 13
+    FLOAT    shift, and go to state 14
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 157
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    $default  reduce using rule 14 (st6)
-
-    st3  go to state 164
-    st5  go to state 115
-    st6  go to state 116
+    simple_expr  go to state 162
+    val          go to state 142
 
 
 state 136
 
-   33 expr: bool_prim . IS BOOL
-   34     | bool_prim . IS NOT BOOL
-   35     | bool_prim .
-   36 bool_prim: bool_prim . IS NUL
-   37          | bool_prim . IS NOT NUL
-   38          | bool_prim . CMP pred
-   39          | bool_prim . CMP ALL '(' st1 ')'
-   40          | bool_prim . CMP ANY '(' st1 ')'
+   69 simple_expr: '!' . simple_expr
 
-    IS   shift, and go to state 165
-    CMP  shift, and go to state 166
+    ID       shift, and go to state 7
+    LITERAL  shift, and go to state 8
+    NUL      shift, and go to state 10
+    EXISTS   shift, and go to state 131
+    BOOL     shift, and go to state 12
+    INT      shift, and go to state 13
+    FLOAT    shift, and go to state 14
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 157
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    $default  reduce using rule 35 (expr)
+    simple_expr  go to state 163
+    val          go to state 142
 
 
 state 137
 
-   41 bool_prim: pred .
+    4 st2: WHERE expr . st3
+   31 expr: expr . OR expr
+   32     | expr . XOR expr
+   33     | expr . AND expr
 
-    $default  reduce using rule 41 (bool_prim)
+    GROUP   shift, and go to state 109
+    HAVING  shift, and go to state 110
+    ORDER   shift, and go to state 111
+    LIMIT   shift, and go to state 112
+    OR      shift, and go to state 164
+    AND     shift, and go to state 165
+    XOR     shift, and go to state 166
+
+    $default  reduce using rule 20 (st8)
+
+    st3  go to state 167
+    st5  go to state 116
+    st6  go to state 117
+    st8  go to state 118
 
 
 state 138
 
-   42 pred: bit_expr . pred1
-   43     | bit_expr . NOT pred1
-   44     | bit_expr .
-   52 bit_expr: bit_expr . '|' bit_expr
-   53         | bit_expr . '&' bit_expr
-   54         | bit_expr . LS bit_expr
-   55         | bit_expr . RS bit_expr
-   56         | bit_expr . '+' bit_expr
-   57         | bit_expr . '-' bit_expr
-   58         | bit_expr . '*' bit_expr
-   59         | bit_expr . DIV bit_expr
-   60         | bit_expr . MOD bit_expr
-   61         | bit_expr . '^' bit_expr
+   36 expr: bool_prim . IS BOOL
+   37     | bool_prim . IS NOT BOOL
+   38     | bool_prim .
+   39 bool_prim: bool_prim . IS NUL
+   40          | bool_prim . IS NOT NUL
+   41          | bool_prim . CMP pred
+   42          | bool_prim . CMP ALL '(' st1 ')'
+   43          | bool_prim . CMP ANY '(' st1 ')'
 
-    NOT      shift, and go to state 167
-    IN       shift, and go to state 168
-    BETWEEN  shift, and go to state 169
-    LIKE     shift, and go to state 170
-    REG      shift, and go to state 171
-    LS       shift, and go to state 172
-    RS       shift, and go to state 173
-    DIV      shift, and go to state 174
-    MOD      shift, and go to state 175
-    '|'      shift, and go to state 176
-    '&'      shift, and go to state 177
-    '+'      shift, and go to state 178
-    '-'      shift, and go to state 179
-    '*'      shift, and go to state 180
-    '^'      shift, and go to state 181
+    IS   shift, and go to state 168
+    CMP  shift, and go to state 169
 
-    $default  reduce using rule 44 (pred)
-
-    pred1  go to state 182
+    $default  reduce using rule 38 (expr)
 
 
 state 139
 
-   62 bit_expr: simple_expr .
+   44 bool_prim: pred .
 
-    $default  reduce using rule 62 (bit_expr)
+    $default  reduce using rule 44 (bool_prim)
 
 
 state 140
 
-   69 simple_expr: val .
+   45 pred: bit_expr . pred1
+   46     | bit_expr . NOT pred1
+   47     | bit_expr .
+   55 bit_expr: bit_expr . '|' bit_expr
+   56         | bit_expr . '&' bit_expr
+   57         | bit_expr . LS bit_expr
+   58         | bit_expr . RS bit_expr
+   59         | bit_expr . '+' bit_expr
+   60         | bit_expr . '-' bit_expr
+   61         | bit_expr . '*' bit_expr
+   62         | bit_expr . DIV bit_expr
+   63         | bit_expr . MOD bit_expr
+   64         | bit_expr . '^' bit_expr
 
-    $default  reduce using rule 69 (simple_expr)
+    NOT      shift, and go to state 170
+    IN       shift, and go to state 171
+    BETWEEN  shift, and go to state 172
+    LIKE     shift, and go to state 173
+    REG      shift, and go to state 174
+    LS       shift, and go to state 175
+    RS       shift, and go to state 176
+    DIV      shift, and go to state 177
+    MOD      shift, and go to state 178
+    '|'      shift, and go to state 179
+    '&'      shift, and go to state 180
+    '+'      shift, and go to state 181
+    '-'      shift, and go to state 182
+    '*'      shift, and go to state 183
+    '^'      shift, and go to state 184
+
+    $default  reduce using rule 47 (pred)
+
+    pred1  go to state 185
 
 
 state 141
 
-    6 st3: GROUP BY . st4 st5
+   65 bit_expr: simple_expr .
 
-    ID   shift, and go to state 183
-    INT  shift, and go to state 184
-
-    st4  go to state 185
+    $default  reduce using rule 65 (bit_expr)
 
 
 state 142
 
-   11 st5: HAVING expr1 . st6
-   76 expr1: expr1 . OR expr1
-   77      | expr1 . XOR expr1
-   78      | expr1 . AND expr1
+   72 simple_expr: val .
 
-    ORDER  shift, and go to state 111
-    OR     shift, and go to state 46
-    AND    shift, and go to state 47
-    XOR    shift, and go to state 48
-
-    $default  reduce using rule 14 (st6)
-
-    st6  go to state 186
+    $default  reduce using rule 72 (simple_expr)
 
 
 state 143
 
-   13 st6: ORDER BY . st4
+    6 st3: GROUP BY . st4 st5
 
-    ID   shift, and go to state 183
-    INT  shift, and go to state 184
+    ID   shift, and go to state 186
+    INT  shift, and go to state 187
 
-    st4  go to state 187
+    st4  go to state 188
 
 
 state 144
 
-   25 tableList: tableList . ',' tableList
-   25          | tableList ',' tableList .
+   11 st5: HAVING expr1 . st6
+   79 expr1: expr1 . OR expr1
+   80      | expr1 . XOR expr1
+   81      | expr1 . AND expr1
 
-    $default  reduce using rule 25 (tableList)
+    ORDER  shift, and go to state 111
+    LIMIT  shift, and go to state 112
+    OR     shift, and go to state 46
+    AND    shift, and go to state 47
+    XOR    shift, and go to state 48
+
+    $default  reduce using rule 20 (st8)
+
+    st6  go to state 189
+    st8  go to state 118
 
 
 state 145
 
-   88 bool_prim1: bool_prim1 CMP ANY '(' st1 . ')'
+   13 st6: ORDER BY . st4
 
-    ')'  shift, and go to state 188
+    ID   shift, and go to state 186
+    INT  shift, and go to state 187
+
+    st4  go to state 190
 
 
 state 146
 
-   87 bool_prim1: bool_prim1 CMP ALL '(' st1 . ')'
+   18 st8: LIMIT INT .
+   19    | LIMIT INT . ',' INT
 
-    ')'  shift, and go to state 189
+    ','  shift, and go to state 191
+
+    $default  reduce using rule 18 (st8)
 
 
 state 147
 
-   93 pred3: IN '(' st1 ')' .
+   28 tableList: tableList . ',' tableList
+   28          | tableList ',' tableList .
 
-    $default  reduce using rule 93 (pred3)
+    $default  reduce using rule 28 (tableList)
 
 
 state 148
 
-   98 expr1_lst: expr1 ',' . expr1_lst
+   91 bool_prim1: bool_prim1 CMP ANY '(' st1 . ')'
+
+    ')'  shift, and go to state 192
+
+
+state 149
+
+   90 bool_prim1: bool_prim1 CMP ALL '(' st1 . ')'
+
+    ')'  shift, and go to state 193
+
+
+state 150
+
+   96 pred3: IN '(' st1 ')' .
+
+    $default  reduce using rule 96 (pred3)
+
+
+state 151
+
+  101 expr1_lst: expr1 ',' . expr1_lst
 
     FUNC     shift, and go to state 5
     ID       shift, and go to state 7
@@ -2401,1180 +2435,1196 @@ state 148
     '!'      shift, and go to state 20
 
     val           go to state 23
-    expr1         go to state 122
+    expr1         go to state 124
     bool_prim1    go to state 25
     pred2         go to state 26
-    expr1_lst     go to state 190
+    expr1_lst     go to state 194
     bit_expr1     go to state 27
     simple_expr1  go to state 28
 
 
-state 149
-
-   94 pred3: IN '(' expr1_lst ')' .
-
-    $default  reduce using rule 94 (pred3)
-
-
-state 150
-
-   95 pred3: BETWEEN bit_expr1 AND pred2 .
-
-    $default  reduce using rule 95 (pred3)
-
-
-state 151
-
-   27 tableList: '(' st1 ')' alias .
-
-    $default  reduce using rule 27 (tableList)
-
-
 state 152
 
-   28 expr: expr . OR expr
-   29     | expr . XOR expr
-   30     | expr . AND expr
-   31     | NOT expr .
+   97 pred3: IN '(' expr1_lst ')' .
 
-    $default  reduce using rule 31 (expr)
+    $default  reduce using rule 97 (pred3)
 
 
 state 153
 
-   68 simple_expr: EXISTS '(' . st1 ')'
+   98 pred3: BETWEEN bit_expr1 AND pred2 .
 
-    SELECT  shift, and go to state 1
-
-    st1  go to state 191
+    $default  reduce using rule 98 (pred3)
 
 
 state 154
 
-   67 simple_expr: '(' . st1 ')'
+   30 tableList: '(' st1 ')' alias .
 
-    SELECT  shift, and go to state 1
-
-    st1  go to state 157
+    $default  reduce using rule 30 (tableList)
 
 
 state 155
 
-   63 simple_expr: '+' simple_expr .
+   31 expr: expr . OR expr
+   32     | expr . XOR expr
+   33     | expr . AND expr
+   34     | NOT expr .
 
-    $default  reduce using rule 63 (simple_expr)
+    $default  reduce using rule 34 (expr)
 
 
 state 156
 
-   64 simple_expr: '-' simple_expr .
+   71 simple_expr: EXISTS '(' . st1 ')'
 
-    $default  reduce using rule 64 (simple_expr)
+    SELECT  shift, and go to state 1
+
+    st1  go to state 195
 
 
 state 157
 
-   67 simple_expr: '(' st1 . ')'
+   70 simple_expr: '(' . st1 ')'
 
-    ')'  shift, and go to state 192
+    SELECT  shift, and go to state 1
+
+    st1  go to state 160
 
 
 state 158
 
-   28 expr: expr . OR expr
-   29     | expr . XOR expr
-   30     | expr . AND expr
-   32     | '(' expr . ')'
-
-    OR   shift, and go to state 161
-    AND  shift, and go to state 162
-    XOR  shift, and go to state 163
-    ')'  shift, and go to state 193
-
-
-state 159
-
-   65 simple_expr: '~' simple_expr .
-
-    $default  reduce using rule 65 (simple_expr)
-
-
-state 160
-
-   66 simple_expr: '!' simple_expr .
+   66 simple_expr: '+' simple_expr .
 
     $default  reduce using rule 66 (simple_expr)
 
 
+state 159
+
+   67 simple_expr: '-' simple_expr .
+
+    $default  reduce using rule 67 (simple_expr)
+
+
+state 160
+
+   70 simple_expr: '(' st1 . ')'
+
+    ')'  shift, and go to state 196
+
+
 state 161
 
-   28 expr: expr OR . expr
+   31 expr: expr . OR expr
+   32     | expr . XOR expr
+   33     | expr . AND expr
+   35     | '(' expr . ')'
 
-    ID       shift, and go to state 7
-    LITERAL  shift, and go to state 8
-    NOT      shift, and go to state 128
-    NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
-    BOOL     shift, and go to state 12
-    INT      shift, and go to state 13
-    FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 132
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
-
-    expr         go to state 194
-    bool_prim    go to state 136
-    pred         go to state 137
-    bit_expr     go to state 138
-    simple_expr  go to state 139
-    val          go to state 140
+    OR   shift, and go to state 164
+    AND  shift, and go to state 165
+    XOR  shift, and go to state 166
+    ')'  shift, and go to state 197
 
 
 state 162
 
-   30 expr: expr AND . expr
+   68 simple_expr: '~' simple_expr .
 
-    ID       shift, and go to state 7
-    LITERAL  shift, and go to state 8
-    NOT      shift, and go to state 128
-    NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
-    BOOL     shift, and go to state 12
-    INT      shift, and go to state 13
-    FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 132
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
-
-    expr         go to state 195
-    bool_prim    go to state 136
-    pred         go to state 137
-    bit_expr     go to state 138
-    simple_expr  go to state 139
-    val          go to state 140
+    $default  reduce using rule 68 (simple_expr)
 
 
 state 163
 
-   29 expr: expr XOR . expr
+   69 simple_expr: '!' simple_expr .
 
-    ID       shift, and go to state 7
-    LITERAL  shift, and go to state 8
-    NOT      shift, and go to state 128
-    NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
-    BOOL     shift, and go to state 12
-    INT      shift, and go to state 13
-    FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 132
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
-
-    expr         go to state 196
-    bool_prim    go to state 136
-    pred         go to state 137
-    bit_expr     go to state 138
-    simple_expr  go to state 139
-    val          go to state 140
+    $default  reduce using rule 69 (simple_expr)
 
 
 state 164
+
+   31 expr: expr OR . expr
+
+    ID       shift, and go to state 7
+    LITERAL  shift, and go to state 8
+    NOT      shift, and go to state 130
+    NUL      shift, and go to state 10
+    EXISTS   shift, and go to state 131
+    BOOL     shift, and go to state 12
+    INT      shift, and go to state 13
+    FLOAT    shift, and go to state 14
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 134
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
+
+    expr         go to state 198
+    bool_prim    go to state 138
+    pred         go to state 139
+    bit_expr     go to state 140
+    simple_expr  go to state 141
+    val          go to state 142
+
+
+state 165
+
+   33 expr: expr AND . expr
+
+    ID       shift, and go to state 7
+    LITERAL  shift, and go to state 8
+    NOT      shift, and go to state 130
+    NUL      shift, and go to state 10
+    EXISTS   shift, and go to state 131
+    BOOL     shift, and go to state 12
+    INT      shift, and go to state 13
+    FLOAT    shift, and go to state 14
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 134
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
+
+    expr         go to state 199
+    bool_prim    go to state 138
+    pred         go to state 139
+    bit_expr     go to state 140
+    simple_expr  go to state 141
+    val          go to state 142
+
+
+state 166
+
+   32 expr: expr XOR . expr
+
+    ID       shift, and go to state 7
+    LITERAL  shift, and go to state 8
+    NOT      shift, and go to state 130
+    NUL      shift, and go to state 10
+    EXISTS   shift, and go to state 131
+    BOOL     shift, and go to state 12
+    INT      shift, and go to state 13
+    FLOAT    shift, and go to state 14
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 134
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
+
+    expr         go to state 200
+    bool_prim    go to state 138
+    pred         go to state 139
+    bit_expr     go to state 140
+    simple_expr  go to state 141
+    val          go to state 142
+
+
+state 167
 
     4 st2: WHERE expr st3 .
 
     $default  reduce using rule 4 (st2)
 
 
-state 165
-
-   33 expr: bool_prim IS . BOOL
-   34     | bool_prim IS . NOT BOOL
-   36 bool_prim: bool_prim IS . NUL
-   37          | bool_prim IS . NOT NUL
-
-    NOT   shift, and go to state 197
-    NUL   shift, and go to state 198
-    BOOL  shift, and go to state 199
-
-
-state 166
-
-   38 bool_prim: bool_prim CMP . pred
-   39          | bool_prim CMP . ALL '(' st1 ')'
-   40          | bool_prim CMP . ANY '(' st1 ')'
-
-    ID       shift, and go to state 7
-    LITERAL  shift, and go to state 8
-    NUL      shift, and go to state 10
-    ANY      shift, and go to state 200
-    ALL      shift, and go to state 201
-    EXISTS   shift, and go to state 129
-    BOOL     shift, and go to state 12
-    INT      shift, and go to state 13
-    FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 154
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
-
-    pred         go to state 202
-    bit_expr     go to state 138
-    simple_expr  go to state 139
-    val          go to state 140
-
-
-state 167
-
-   43 pred: bit_expr NOT . pred1
-
-    IN       shift, and go to state 168
-    BETWEEN  shift, and go to state 169
-    LIKE     shift, and go to state 170
-    REG      shift, and go to state 171
-
-    pred1  go to state 203
-
-
 state 168
 
-   45 pred1: IN . '(' st1 ')'
-   46      | IN . '(' expr_lst ')'
+   36 expr: bool_prim IS . BOOL
+   37     | bool_prim IS . NOT BOOL
+   39 bool_prim: bool_prim IS . NUL
+   40          | bool_prim IS . NOT NUL
 
-    '('  shift, and go to state 204
+    NOT   shift, and go to state 201
+    NUL   shift, and go to state 202
+    BOOL  shift, and go to state 203
 
 
 state 169
 
-   47 pred1: BETWEEN . bit_expr AND pred
+   41 bool_prim: bool_prim CMP . pred
+   42          | bool_prim CMP . ALL '(' st1 ')'
+   43          | bool_prim CMP . ANY '(' st1 ')'
 
     ID       shift, and go to state 7
     LITERAL  shift, and go to state 8
     NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
+    ANY      shift, and go to state 204
+    ALL      shift, and go to state 205
+    EXISTS   shift, and go to state 131
     BOOL     shift, and go to state 12
     INT      shift, and go to state 13
     FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 154
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 157
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    bit_expr     go to state 205
-    simple_expr  go to state 139
-    val          go to state 140
+    pred         go to state 206
+    bit_expr     go to state 140
+    simple_expr  go to state 141
+    val          go to state 142
 
 
 state 170
 
-   48 pred1: LIKE . simple_expr
+   46 pred: bit_expr NOT . pred1
 
-    ID       shift, and go to state 7
-    LITERAL  shift, and go to state 8
-    NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
-    BOOL     shift, and go to state 12
-    INT      shift, and go to state 13
-    FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 154
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
+    IN       shift, and go to state 171
+    BETWEEN  shift, and go to state 172
+    LIKE     shift, and go to state 173
+    REG      shift, and go to state 174
 
-    simple_expr  go to state 206
-    val          go to state 140
+    pred1  go to state 207
 
 
 state 171
 
-   49 pred1: REG . bit_expr
+   48 pred1: IN . '(' st1 ')'
+   49      | IN . '(' expr_lst ')'
 
-    ID       shift, and go to state 7
-    LITERAL  shift, and go to state 8
-    NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
-    BOOL     shift, and go to state 12
-    INT      shift, and go to state 13
-    FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 154
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
-
-    bit_expr     go to state 207
-    simple_expr  go to state 139
-    val          go to state 140
+    '('  shift, and go to state 208
 
 
 state 172
 
-   54 bit_expr: bit_expr LS . bit_expr
+   50 pred1: BETWEEN . bit_expr AND pred
 
     ID       shift, and go to state 7
     LITERAL  shift, and go to state 8
     NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
+    EXISTS   shift, and go to state 131
     BOOL     shift, and go to state 12
     INT      shift, and go to state 13
     FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 154
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 157
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    bit_expr     go to state 208
-    simple_expr  go to state 139
-    val          go to state 140
+    bit_expr     go to state 209
+    simple_expr  go to state 141
+    val          go to state 142
 
 
 state 173
 
-   55 bit_expr: bit_expr RS . bit_expr
+   51 pred1: LIKE . simple_expr
 
     ID       shift, and go to state 7
     LITERAL  shift, and go to state 8
     NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
+    EXISTS   shift, and go to state 131
     BOOL     shift, and go to state 12
     INT      shift, and go to state 13
     FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 154
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 157
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    bit_expr     go to state 209
-    simple_expr  go to state 139
-    val          go to state 140
+    simple_expr  go to state 210
+    val          go to state 142
 
 
 state 174
 
-   59 bit_expr: bit_expr DIV . bit_expr
+   52 pred1: REG . bit_expr
 
     ID       shift, and go to state 7
     LITERAL  shift, and go to state 8
     NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
+    EXISTS   shift, and go to state 131
     BOOL     shift, and go to state 12
     INT      shift, and go to state 13
     FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 154
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 157
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    bit_expr     go to state 210
-    simple_expr  go to state 139
-    val          go to state 140
+    bit_expr     go to state 211
+    simple_expr  go to state 141
+    val          go to state 142
 
 
 state 175
 
-   60 bit_expr: bit_expr MOD . bit_expr
+   57 bit_expr: bit_expr LS . bit_expr
 
     ID       shift, and go to state 7
     LITERAL  shift, and go to state 8
     NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
+    EXISTS   shift, and go to state 131
     BOOL     shift, and go to state 12
     INT      shift, and go to state 13
     FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 154
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 157
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    bit_expr     go to state 211
-    simple_expr  go to state 139
-    val          go to state 140
+    bit_expr     go to state 212
+    simple_expr  go to state 141
+    val          go to state 142
 
 
 state 176
 
-   52 bit_expr: bit_expr '|' . bit_expr
+   58 bit_expr: bit_expr RS . bit_expr
 
     ID       shift, and go to state 7
     LITERAL  shift, and go to state 8
     NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
+    EXISTS   shift, and go to state 131
     BOOL     shift, and go to state 12
     INT      shift, and go to state 13
     FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 154
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 157
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    bit_expr     go to state 212
-    simple_expr  go to state 139
-    val          go to state 140
+    bit_expr     go to state 213
+    simple_expr  go to state 141
+    val          go to state 142
 
 
 state 177
 
-   53 bit_expr: bit_expr '&' . bit_expr
+   62 bit_expr: bit_expr DIV . bit_expr
 
     ID       shift, and go to state 7
     LITERAL  shift, and go to state 8
     NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
+    EXISTS   shift, and go to state 131
     BOOL     shift, and go to state 12
     INT      shift, and go to state 13
     FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 154
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 157
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    bit_expr     go to state 213
-    simple_expr  go to state 139
-    val          go to state 140
+    bit_expr     go to state 214
+    simple_expr  go to state 141
+    val          go to state 142
 
 
 state 178
 
-   56 bit_expr: bit_expr '+' . bit_expr
+   63 bit_expr: bit_expr MOD . bit_expr
 
     ID       shift, and go to state 7
     LITERAL  shift, and go to state 8
     NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
+    EXISTS   shift, and go to state 131
     BOOL     shift, and go to state 12
     INT      shift, and go to state 13
     FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 154
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 157
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    bit_expr     go to state 214
-    simple_expr  go to state 139
-    val          go to state 140
+    bit_expr     go to state 215
+    simple_expr  go to state 141
+    val          go to state 142
 
 
 state 179
 
-   57 bit_expr: bit_expr '-' . bit_expr
+   55 bit_expr: bit_expr '|' . bit_expr
 
     ID       shift, and go to state 7
     LITERAL  shift, and go to state 8
     NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
+    EXISTS   shift, and go to state 131
     BOOL     shift, and go to state 12
     INT      shift, and go to state 13
     FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 154
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 157
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    bit_expr     go to state 215
-    simple_expr  go to state 139
-    val          go to state 140
+    bit_expr     go to state 216
+    simple_expr  go to state 141
+    val          go to state 142
 
 
 state 180
 
-   58 bit_expr: bit_expr '*' . bit_expr
+   56 bit_expr: bit_expr '&' . bit_expr
 
     ID       shift, and go to state 7
     LITERAL  shift, and go to state 8
     NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
+    EXISTS   shift, and go to state 131
     BOOL     shift, and go to state 12
     INT      shift, and go to state 13
     FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 154
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 157
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    bit_expr     go to state 216
-    simple_expr  go to state 139
-    val          go to state 140
+    bit_expr     go to state 217
+    simple_expr  go to state 141
+    val          go to state 142
 
 
 state 181
 
-   61 bit_expr: bit_expr '^' . bit_expr
+   59 bit_expr: bit_expr '+' . bit_expr
 
     ID       shift, and go to state 7
     LITERAL  shift, and go to state 8
     NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
+    EXISTS   shift, and go to state 131
     BOOL     shift, and go to state 12
     INT      shift, and go to state 13
     FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 154
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 157
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    bit_expr     go to state 217
-    simple_expr  go to state 139
-    val          go to state 140
+    bit_expr     go to state 218
+    simple_expr  go to state 141
+    val          go to state 142
 
 
 state 182
 
-   42 pred: bit_expr pred1 .
+   60 bit_expr: bit_expr '-' . bit_expr
 
-    $default  reduce using rule 42 (pred)
+    ID       shift, and go to state 7
+    LITERAL  shift, and go to state 8
+    NUL      shift, and go to state 10
+    EXISTS   shift, and go to state 131
+    BOOL     shift, and go to state 12
+    INT      shift, and go to state 13
+    FLOAT    shift, and go to state 14
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 157
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
+
+    bit_expr     go to state 219
+    simple_expr  go to state 141
+    val          go to state 142
 
 
 state 183
 
-    9 st4: ID . st7
+   61 bit_expr: bit_expr '*' . bit_expr
 
-    ASC   shift, and go to state 218
-    DESC  shift, and go to state 219
+    ID       shift, and go to state 7
+    LITERAL  shift, and go to state 8
+    NUL      shift, and go to state 10
+    EXISTS   shift, and go to state 131
+    BOOL     shift, and go to state 12
+    INT      shift, and go to state 13
+    FLOAT    shift, and go to state 14
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 157
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    $default  reduce using rule 17 (st7)
-
-    st7  go to state 220
+    bit_expr     go to state 220
+    simple_expr  go to state 141
+    val          go to state 142
 
 
 state 184
 
-   10 st4: INT . st7
+   64 bit_expr: bit_expr '^' . bit_expr
 
-    ASC   shift, and go to state 218
-    DESC  shift, and go to state 219
+    ID       shift, and go to state 7
+    LITERAL  shift, and go to state 8
+    NUL      shift, and go to state 10
+    EXISTS   shift, and go to state 131
+    BOOL     shift, and go to state 12
+    INT      shift, and go to state 13
+    FLOAT    shift, and go to state 14
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 157
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    $default  reduce using rule 17 (st7)
-
-    st7  go to state 221
+    bit_expr     go to state 221
+    simple_expr  go to state 141
+    val          go to state 142
 
 
 state 185
+
+   45 pred: bit_expr pred1 .
+
+    $default  reduce using rule 45 (pred)
+
+
+state 186
+
+    9 st4: ID . st7
+
+    ASC   shift, and go to state 222
+    DESC  shift, and go to state 223
+
+    $default  reduce using rule 17 (st7)
+
+    st7  go to state 224
+
+
+state 187
+
+   10 st4: INT . st7
+
+    ASC   shift, and go to state 222
+    DESC  shift, and go to state 223
+
+    $default  reduce using rule 17 (st7)
+
+    st7  go to state 225
+
+
+state 188
 
     6 st3: GROUP BY st4 . st5
     8 st4: st4 . ',' st4
 
     HAVING  shift, and go to state 110
     ORDER   shift, and go to state 111
-    ','     shift, and go to state 222
+    LIMIT   shift, and go to state 112
+    ','     shift, and go to state 226
 
-    $default  reduce using rule 14 (st6)
+    $default  reduce using rule 20 (st8)
 
-    st5  go to state 223
-    st6  go to state 116
+    st5  go to state 227
+    st6  go to state 117
+    st8  go to state 118
 
 
-state 186
+state 189
 
    11 st5: HAVING expr1 st6 .
 
     $default  reduce using rule 11 (st5)
 
 
-state 187
+state 190
 
     8 st4: st4 . ',' st4
    13 st6: ORDER BY st4 .
 
-    ','  shift, and go to state 222
+    ','  shift, and go to state 226
 
     $default  reduce using rule 13 (st6)
 
 
-state 188
-
-   88 bool_prim1: bool_prim1 CMP ANY '(' st1 ')' .
-
-    $default  reduce using rule 88 (bool_prim1)
-
-
-state 189
-
-   87 bool_prim1: bool_prim1 CMP ALL '(' st1 ')' .
-
-    $default  reduce using rule 87 (bool_prim1)
-
-
-state 190
-
-   98 expr1_lst: expr1 ',' expr1_lst .
-
-    $default  reduce using rule 98 (expr1_lst)
-
-
 state 191
 
-   68 simple_expr: EXISTS '(' st1 . ')'
+   19 st8: LIMIT INT ',' . INT
 
-    ')'  shift, and go to state 224
+    INT  shift, and go to state 228
 
 
 state 192
 
-   67 simple_expr: '(' st1 ')' .
+   91 bool_prim1: bool_prim1 CMP ANY '(' st1 ')' .
 
-    $default  reduce using rule 67 (simple_expr)
+    $default  reduce using rule 91 (bool_prim1)
 
 
 state 193
 
-   32 expr: '(' expr ')' .
+   90 bool_prim1: bool_prim1 CMP ALL '(' st1 ')' .
 
-    $default  reduce using rule 32 (expr)
+    $default  reduce using rule 90 (bool_prim1)
 
 
 state 194
 
-   28 expr: expr . OR expr
-   28     | expr OR expr .
-   29     | expr . XOR expr
-   30     | expr . AND expr
+  101 expr1_lst: expr1 ',' expr1_lst .
 
-    AND  shift, and go to state 162
-    XOR  shift, and go to state 163
-
-    $default  reduce using rule 28 (expr)
+    $default  reduce using rule 101 (expr1_lst)
 
 
 state 195
 
-   28 expr: expr . OR expr
-   29     | expr . XOR expr
-   30     | expr . AND expr
-   30     | expr AND expr .
+   71 simple_expr: EXISTS '(' st1 . ')'
 
-    $default  reduce using rule 30 (expr)
+    ')'  shift, and go to state 229
 
 
 state 196
 
-   28 expr: expr . OR expr
-   29     | expr . XOR expr
-   29     | expr XOR expr .
-   30     | expr . AND expr
+   70 simple_expr: '(' st1 ')' .
 
-    AND  shift, and go to state 162
-
-    $default  reduce using rule 29 (expr)
+    $default  reduce using rule 70 (simple_expr)
 
 
 state 197
 
-   34 expr: bool_prim IS NOT . BOOL
-   37 bool_prim: bool_prim IS NOT . NUL
+   35 expr: '(' expr ')' .
 
-    NUL   shift, and go to state 225
-    BOOL  shift, and go to state 226
+    $default  reduce using rule 35 (expr)
 
 
 state 198
 
-   36 bool_prim: bool_prim IS NUL .
+   31 expr: expr . OR expr
+   31     | expr OR expr .
+   32     | expr . XOR expr
+   33     | expr . AND expr
 
-    $default  reduce using rule 36 (bool_prim)
+    AND  shift, and go to state 165
+    XOR  shift, and go to state 166
+
+    $default  reduce using rule 31 (expr)
 
 
 state 199
 
-   33 expr: bool_prim IS BOOL .
+   31 expr: expr . OR expr
+   32     | expr . XOR expr
+   33     | expr . AND expr
+   33     | expr AND expr .
 
     $default  reduce using rule 33 (expr)
 
 
 state 200
 
-   40 bool_prim: bool_prim CMP ANY . '(' st1 ')'
+   31 expr: expr . OR expr
+   32     | expr . XOR expr
+   32     | expr XOR expr .
+   33     | expr . AND expr
 
-    '('  shift, and go to state 227
+    AND  shift, and go to state 165
+
+    $default  reduce using rule 32 (expr)
 
 
 state 201
 
-   39 bool_prim: bool_prim CMP ALL . '(' st1 ')'
+   37 expr: bool_prim IS NOT . BOOL
+   40 bool_prim: bool_prim IS NOT . NUL
 
-    '('  shift, and go to state 228
+    NUL   shift, and go to state 230
+    BOOL  shift, and go to state 231
 
 
 state 202
 
-   38 bool_prim: bool_prim CMP pred .
+   39 bool_prim: bool_prim IS NUL .
 
-    $default  reduce using rule 38 (bool_prim)
+    $default  reduce using rule 39 (bool_prim)
 
 
 state 203
 
-   43 pred: bit_expr NOT pred1 .
+   36 expr: bool_prim IS BOOL .
 
-    $default  reduce using rule 43 (pred)
+    $default  reduce using rule 36 (expr)
 
 
 state 204
 
-   45 pred1: IN '(' . st1 ')'
-   46      | IN '(' . expr_lst ')'
+   43 bool_prim: bool_prim CMP ANY . '(' st1 ')'
 
-    SELECT   shift, and go to state 1
-    ID       shift, and go to state 7
-    LITERAL  shift, and go to state 8
-    NOT      shift, and go to state 128
-    NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
-    BOOL     shift, and go to state 12
-    INT      shift, and go to state 13
-    FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 132
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
-
-    st1          go to state 229
-    expr         go to state 230
-    bool_prim    go to state 136
-    pred         go to state 137
-    expr_lst     go to state 231
-    bit_expr     go to state 138
-    simple_expr  go to state 139
-    val          go to state 140
+    '('  shift, and go to state 232
 
 
 state 205
 
-   47 pred1: BETWEEN bit_expr . AND pred
-   52 bit_expr: bit_expr . '|' bit_expr
-   53         | bit_expr . '&' bit_expr
-   54         | bit_expr . LS bit_expr
-   55         | bit_expr . RS bit_expr
-   56         | bit_expr . '+' bit_expr
-   57         | bit_expr . '-' bit_expr
-   58         | bit_expr . '*' bit_expr
-   59         | bit_expr . DIV bit_expr
-   60         | bit_expr . MOD bit_expr
-   61         | bit_expr . '^' bit_expr
+   42 bool_prim: bool_prim CMP ALL . '(' st1 ')'
 
-    AND  shift, and go to state 232
-    LS   shift, and go to state 172
-    RS   shift, and go to state 173
-    DIV  shift, and go to state 174
-    MOD  shift, and go to state 175
-    '|'  shift, and go to state 176
-    '&'  shift, and go to state 177
-    '+'  shift, and go to state 178
-    '-'  shift, and go to state 179
-    '*'  shift, and go to state 180
-    '^'  shift, and go to state 181
+    '('  shift, and go to state 233
 
 
 state 206
 
-   48 pred1: LIKE simple_expr .
+   41 bool_prim: bool_prim CMP pred .
 
-    $default  reduce using rule 48 (pred1)
+    $default  reduce using rule 41 (bool_prim)
 
 
 state 207
 
-   49 pred1: REG bit_expr .
-   52 bit_expr: bit_expr . '|' bit_expr
-   53         | bit_expr . '&' bit_expr
-   54         | bit_expr . LS bit_expr
-   55         | bit_expr . RS bit_expr
-   56         | bit_expr . '+' bit_expr
-   57         | bit_expr . '-' bit_expr
-   58         | bit_expr . '*' bit_expr
-   59         | bit_expr . DIV bit_expr
-   60         | bit_expr . MOD bit_expr
-   61         | bit_expr . '^' bit_expr
+   46 pred: bit_expr NOT pred1 .
 
-    LS   shift, and go to state 172
-    RS   shift, and go to state 173
-    DIV  shift, and go to state 174
-    MOD  shift, and go to state 175
-    '|'  shift, and go to state 176
-    '&'  shift, and go to state 177
-    '+'  shift, and go to state 178
-    '-'  shift, and go to state 179
-    '*'  shift, and go to state 180
-    '^'  shift, and go to state 181
-
-    $default  reduce using rule 49 (pred1)
+    $default  reduce using rule 46 (pred)
 
 
 state 208
 
-   52 bit_expr: bit_expr . '|' bit_expr
-   53         | bit_expr . '&' bit_expr
-   54         | bit_expr . LS bit_expr
-   54         | bit_expr LS bit_expr .
-   55         | bit_expr . RS bit_expr
-   56         | bit_expr . '+' bit_expr
-   57         | bit_expr . '-' bit_expr
-   58         | bit_expr . '*' bit_expr
-   59         | bit_expr . DIV bit_expr
-   60         | bit_expr . MOD bit_expr
-   61         | bit_expr . '^' bit_expr
+   48 pred1: IN '(' . st1 ')'
+   49      | IN '(' . expr_lst ')'
 
-    DIV  shift, and go to state 174
-    MOD  shift, and go to state 175
-    '+'  shift, and go to state 178
-    '-'  shift, and go to state 179
-    '*'  shift, and go to state 180
-    '^'  shift, and go to state 181
+    SELECT   shift, and go to state 1
+    ID       shift, and go to state 7
+    LITERAL  shift, and go to state 8
+    NOT      shift, and go to state 130
+    NUL      shift, and go to state 10
+    EXISTS   shift, and go to state 131
+    BOOL     shift, and go to state 12
+    INT      shift, and go to state 13
+    FLOAT    shift, and go to state 14
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 134
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    $default  reduce using rule 54 (bit_expr)
+    st1          go to state 234
+    expr         go to state 235
+    bool_prim    go to state 138
+    pred         go to state 139
+    expr_lst     go to state 236
+    bit_expr     go to state 140
+    simple_expr  go to state 141
+    val          go to state 142
 
 
 state 209
 
-   52 bit_expr: bit_expr . '|' bit_expr
-   53         | bit_expr . '&' bit_expr
-   54         | bit_expr . LS bit_expr
-   55         | bit_expr . RS bit_expr
-   55         | bit_expr RS bit_expr .
-   56         | bit_expr . '+' bit_expr
-   57         | bit_expr . '-' bit_expr
-   58         | bit_expr . '*' bit_expr
-   59         | bit_expr . DIV bit_expr
-   60         | bit_expr . MOD bit_expr
-   61         | bit_expr . '^' bit_expr
+   50 pred1: BETWEEN bit_expr . AND pred
+   55 bit_expr: bit_expr . '|' bit_expr
+   56         | bit_expr . '&' bit_expr
+   57         | bit_expr . LS bit_expr
+   58         | bit_expr . RS bit_expr
+   59         | bit_expr . '+' bit_expr
+   60         | bit_expr . '-' bit_expr
+   61         | bit_expr . '*' bit_expr
+   62         | bit_expr . DIV bit_expr
+   63         | bit_expr . MOD bit_expr
+   64         | bit_expr . '^' bit_expr
 
-    DIV  shift, and go to state 174
-    MOD  shift, and go to state 175
-    '+'  shift, and go to state 178
-    '-'  shift, and go to state 179
-    '*'  shift, and go to state 180
-    '^'  shift, and go to state 181
-
-    $default  reduce using rule 55 (bit_expr)
+    AND  shift, and go to state 237
+    LS   shift, and go to state 175
+    RS   shift, and go to state 176
+    DIV  shift, and go to state 177
+    MOD  shift, and go to state 178
+    '|'  shift, and go to state 179
+    '&'  shift, and go to state 180
+    '+'  shift, and go to state 181
+    '-'  shift, and go to state 182
+    '*'  shift, and go to state 183
+    '^'  shift, and go to state 184
 
 
 state 210
 
-   52 bit_expr: bit_expr . '|' bit_expr
-   53         | bit_expr . '&' bit_expr
-   54         | bit_expr . LS bit_expr
-   55         | bit_expr . RS bit_expr
-   56         | bit_expr . '+' bit_expr
-   57         | bit_expr . '-' bit_expr
-   58         | bit_expr . '*' bit_expr
-   59         | bit_expr . DIV bit_expr
-   59         | bit_expr DIV bit_expr .
-   60         | bit_expr . MOD bit_expr
-   61         | bit_expr . '^' bit_expr
+   51 pred1: LIKE simple_expr .
 
-    '^'  shift, and go to state 181
-
-    $default  reduce using rule 59 (bit_expr)
+    $default  reduce using rule 51 (pred1)
 
 
 state 211
 
-   52 bit_expr: bit_expr . '|' bit_expr
-   53         | bit_expr . '&' bit_expr
-   54         | bit_expr . LS bit_expr
-   55         | bit_expr . RS bit_expr
-   56         | bit_expr . '+' bit_expr
-   57         | bit_expr . '-' bit_expr
-   58         | bit_expr . '*' bit_expr
-   59         | bit_expr . DIV bit_expr
-   60         | bit_expr . MOD bit_expr
-   60         | bit_expr MOD bit_expr .
-   61         | bit_expr . '^' bit_expr
+   52 pred1: REG bit_expr .
+   55 bit_expr: bit_expr . '|' bit_expr
+   56         | bit_expr . '&' bit_expr
+   57         | bit_expr . LS bit_expr
+   58         | bit_expr . RS bit_expr
+   59         | bit_expr . '+' bit_expr
+   60         | bit_expr . '-' bit_expr
+   61         | bit_expr . '*' bit_expr
+   62         | bit_expr . DIV bit_expr
+   63         | bit_expr . MOD bit_expr
+   64         | bit_expr . '^' bit_expr
 
-    '^'  shift, and go to state 181
+    LS   shift, and go to state 175
+    RS   shift, and go to state 176
+    DIV  shift, and go to state 177
+    MOD  shift, and go to state 178
+    '|'  shift, and go to state 179
+    '&'  shift, and go to state 180
+    '+'  shift, and go to state 181
+    '-'  shift, and go to state 182
+    '*'  shift, and go to state 183
+    '^'  shift, and go to state 184
 
-    $default  reduce using rule 60 (bit_expr)
+    $default  reduce using rule 52 (pred1)
 
 
 state 212
 
-   52 bit_expr: bit_expr . '|' bit_expr
-   52         | bit_expr '|' bit_expr .
-   53         | bit_expr . '&' bit_expr
-   54         | bit_expr . LS bit_expr
-   55         | bit_expr . RS bit_expr
-   56         | bit_expr . '+' bit_expr
-   57         | bit_expr . '-' bit_expr
-   58         | bit_expr . '*' bit_expr
-   59         | bit_expr . DIV bit_expr
-   60         | bit_expr . MOD bit_expr
-   61         | bit_expr . '^' bit_expr
+   55 bit_expr: bit_expr . '|' bit_expr
+   56         | bit_expr . '&' bit_expr
+   57         | bit_expr . LS bit_expr
+   57         | bit_expr LS bit_expr .
+   58         | bit_expr . RS bit_expr
+   59         | bit_expr . '+' bit_expr
+   60         | bit_expr . '-' bit_expr
+   61         | bit_expr . '*' bit_expr
+   62         | bit_expr . DIV bit_expr
+   63         | bit_expr . MOD bit_expr
+   64         | bit_expr . '^' bit_expr
 
-    LS   shift, and go to state 172
-    RS   shift, and go to state 173
-    DIV  shift, and go to state 174
-    MOD  shift, and go to state 175
-    '&'  shift, and go to state 177
-    '+'  shift, and go to state 178
-    '-'  shift, and go to state 179
-    '*'  shift, and go to state 180
-    '^'  shift, and go to state 181
-
-    $default  reduce using rule 52 (bit_expr)
-
-
-state 213
-
-   52 bit_expr: bit_expr . '|' bit_expr
-   53         | bit_expr . '&' bit_expr
-   53         | bit_expr '&' bit_expr .
-   54         | bit_expr . LS bit_expr
-   55         | bit_expr . RS bit_expr
-   56         | bit_expr . '+' bit_expr
-   57         | bit_expr . '-' bit_expr
-   58         | bit_expr . '*' bit_expr
-   59         | bit_expr . DIV bit_expr
-   60         | bit_expr . MOD bit_expr
-   61         | bit_expr . '^' bit_expr
-
-    LS   shift, and go to state 172
-    RS   shift, and go to state 173
-    DIV  shift, and go to state 174
-    MOD  shift, and go to state 175
-    '+'  shift, and go to state 178
-    '-'  shift, and go to state 179
-    '*'  shift, and go to state 180
-    '^'  shift, and go to state 181
-
-    $default  reduce using rule 53 (bit_expr)
-
-
-state 214
-
-   52 bit_expr: bit_expr . '|' bit_expr
-   53         | bit_expr . '&' bit_expr
-   54         | bit_expr . LS bit_expr
-   55         | bit_expr . RS bit_expr
-   56         | bit_expr . '+' bit_expr
-   56         | bit_expr '+' bit_expr .
-   57         | bit_expr . '-' bit_expr
-   58         | bit_expr . '*' bit_expr
-   59         | bit_expr . DIV bit_expr
-   60         | bit_expr . MOD bit_expr
-   61         | bit_expr . '^' bit_expr
-
-    DIV  shift, and go to state 174
-    MOD  shift, and go to state 175
-    '*'  shift, and go to state 180
-    '^'  shift, and go to state 181
-
-    $default  reduce using rule 56 (bit_expr)
-
-
-state 215
-
-   52 bit_expr: bit_expr . '|' bit_expr
-   53         | bit_expr . '&' bit_expr
-   54         | bit_expr . LS bit_expr
-   55         | bit_expr . RS bit_expr
-   56         | bit_expr . '+' bit_expr
-   57         | bit_expr . '-' bit_expr
-   57         | bit_expr '-' bit_expr .
-   58         | bit_expr . '*' bit_expr
-   59         | bit_expr . DIV bit_expr
-   60         | bit_expr . MOD bit_expr
-   61         | bit_expr . '^' bit_expr
-
-    DIV  shift, and go to state 174
-    MOD  shift, and go to state 175
-    '*'  shift, and go to state 180
-    '^'  shift, and go to state 181
+    DIV  shift, and go to state 177
+    MOD  shift, and go to state 178
+    '+'  shift, and go to state 181
+    '-'  shift, and go to state 182
+    '*'  shift, and go to state 183
+    '^'  shift, and go to state 184
 
     $default  reduce using rule 57 (bit_expr)
 
 
-state 216
+state 213
 
-   52 bit_expr: bit_expr . '|' bit_expr
-   53         | bit_expr . '&' bit_expr
-   54         | bit_expr . LS bit_expr
-   55         | bit_expr . RS bit_expr
-   56         | bit_expr . '+' bit_expr
-   57         | bit_expr . '-' bit_expr
-   58         | bit_expr . '*' bit_expr
-   58         | bit_expr '*' bit_expr .
-   59         | bit_expr . DIV bit_expr
-   60         | bit_expr . MOD bit_expr
-   61         | bit_expr . '^' bit_expr
+   55 bit_expr: bit_expr . '|' bit_expr
+   56         | bit_expr . '&' bit_expr
+   57         | bit_expr . LS bit_expr
+   58         | bit_expr . RS bit_expr
+   58         | bit_expr RS bit_expr .
+   59         | bit_expr . '+' bit_expr
+   60         | bit_expr . '-' bit_expr
+   61         | bit_expr . '*' bit_expr
+   62         | bit_expr . DIV bit_expr
+   63         | bit_expr . MOD bit_expr
+   64         | bit_expr . '^' bit_expr
 
-    '^'  shift, and go to state 181
+    DIV  shift, and go to state 177
+    MOD  shift, and go to state 178
+    '+'  shift, and go to state 181
+    '-'  shift, and go to state 182
+    '*'  shift, and go to state 183
+    '^'  shift, and go to state 184
 
     $default  reduce using rule 58 (bit_expr)
 
 
+state 214
+
+   55 bit_expr: bit_expr . '|' bit_expr
+   56         | bit_expr . '&' bit_expr
+   57         | bit_expr . LS bit_expr
+   58         | bit_expr . RS bit_expr
+   59         | bit_expr . '+' bit_expr
+   60         | bit_expr . '-' bit_expr
+   61         | bit_expr . '*' bit_expr
+   62         | bit_expr . DIV bit_expr
+   62         | bit_expr DIV bit_expr .
+   63         | bit_expr . MOD bit_expr
+   64         | bit_expr . '^' bit_expr
+
+    '^'  shift, and go to state 184
+
+    $default  reduce using rule 62 (bit_expr)
+
+
+state 215
+
+   55 bit_expr: bit_expr . '|' bit_expr
+   56         | bit_expr . '&' bit_expr
+   57         | bit_expr . LS bit_expr
+   58         | bit_expr . RS bit_expr
+   59         | bit_expr . '+' bit_expr
+   60         | bit_expr . '-' bit_expr
+   61         | bit_expr . '*' bit_expr
+   62         | bit_expr . DIV bit_expr
+   63         | bit_expr . MOD bit_expr
+   63         | bit_expr MOD bit_expr .
+   64         | bit_expr . '^' bit_expr
+
+    '^'  shift, and go to state 184
+
+    $default  reduce using rule 63 (bit_expr)
+
+
+state 216
+
+   55 bit_expr: bit_expr . '|' bit_expr
+   55         | bit_expr '|' bit_expr .
+   56         | bit_expr . '&' bit_expr
+   57         | bit_expr . LS bit_expr
+   58         | bit_expr . RS bit_expr
+   59         | bit_expr . '+' bit_expr
+   60         | bit_expr . '-' bit_expr
+   61         | bit_expr . '*' bit_expr
+   62         | bit_expr . DIV bit_expr
+   63         | bit_expr . MOD bit_expr
+   64         | bit_expr . '^' bit_expr
+
+    LS   shift, and go to state 175
+    RS   shift, and go to state 176
+    DIV  shift, and go to state 177
+    MOD  shift, and go to state 178
+    '&'  shift, and go to state 180
+    '+'  shift, and go to state 181
+    '-'  shift, and go to state 182
+    '*'  shift, and go to state 183
+    '^'  shift, and go to state 184
+
+    $default  reduce using rule 55 (bit_expr)
+
+
 state 217
 
-   52 bit_expr: bit_expr . '|' bit_expr
-   53         | bit_expr . '&' bit_expr
-   54         | bit_expr . LS bit_expr
-   55         | bit_expr . RS bit_expr
-   56         | bit_expr . '+' bit_expr
-   57         | bit_expr . '-' bit_expr
-   58         | bit_expr . '*' bit_expr
-   59         | bit_expr . DIV bit_expr
-   60         | bit_expr . MOD bit_expr
-   61         | bit_expr . '^' bit_expr
-   61         | bit_expr '^' bit_expr .
+   55 bit_expr: bit_expr . '|' bit_expr
+   56         | bit_expr . '&' bit_expr
+   56         | bit_expr '&' bit_expr .
+   57         | bit_expr . LS bit_expr
+   58         | bit_expr . RS bit_expr
+   59         | bit_expr . '+' bit_expr
+   60         | bit_expr . '-' bit_expr
+   61         | bit_expr . '*' bit_expr
+   62         | bit_expr . DIV bit_expr
+   63         | bit_expr . MOD bit_expr
+   64         | bit_expr . '^' bit_expr
+
+    LS   shift, and go to state 175
+    RS   shift, and go to state 176
+    DIV  shift, and go to state 177
+    MOD  shift, and go to state 178
+    '+'  shift, and go to state 181
+    '-'  shift, and go to state 182
+    '*'  shift, and go to state 183
+    '^'  shift, and go to state 184
+
+    $default  reduce using rule 56 (bit_expr)
+
+
+state 218
+
+   55 bit_expr: bit_expr . '|' bit_expr
+   56         | bit_expr . '&' bit_expr
+   57         | bit_expr . LS bit_expr
+   58         | bit_expr . RS bit_expr
+   59         | bit_expr . '+' bit_expr
+   59         | bit_expr '+' bit_expr .
+   60         | bit_expr . '-' bit_expr
+   61         | bit_expr . '*' bit_expr
+   62         | bit_expr . DIV bit_expr
+   63         | bit_expr . MOD bit_expr
+   64         | bit_expr . '^' bit_expr
+
+    DIV  shift, and go to state 177
+    MOD  shift, and go to state 178
+    '*'  shift, and go to state 183
+    '^'  shift, and go to state 184
+
+    $default  reduce using rule 59 (bit_expr)
+
+
+state 219
+
+   55 bit_expr: bit_expr . '|' bit_expr
+   56         | bit_expr . '&' bit_expr
+   57         | bit_expr . LS bit_expr
+   58         | bit_expr . RS bit_expr
+   59         | bit_expr . '+' bit_expr
+   60         | bit_expr . '-' bit_expr
+   60         | bit_expr '-' bit_expr .
+   61         | bit_expr . '*' bit_expr
+   62         | bit_expr . DIV bit_expr
+   63         | bit_expr . MOD bit_expr
+   64         | bit_expr . '^' bit_expr
+
+    DIV  shift, and go to state 177
+    MOD  shift, and go to state 178
+    '*'  shift, and go to state 183
+    '^'  shift, and go to state 184
+
+    $default  reduce using rule 60 (bit_expr)
+
+
+state 220
+
+   55 bit_expr: bit_expr . '|' bit_expr
+   56         | bit_expr . '&' bit_expr
+   57         | bit_expr . LS bit_expr
+   58         | bit_expr . RS bit_expr
+   59         | bit_expr . '+' bit_expr
+   60         | bit_expr . '-' bit_expr
+   61         | bit_expr . '*' bit_expr
+   61         | bit_expr '*' bit_expr .
+   62         | bit_expr . DIV bit_expr
+   63         | bit_expr . MOD bit_expr
+   64         | bit_expr . '^' bit_expr
+
+    '^'  shift, and go to state 184
 
     $default  reduce using rule 61 (bit_expr)
 
 
-state 218
+state 221
+
+   55 bit_expr: bit_expr . '|' bit_expr
+   56         | bit_expr . '&' bit_expr
+   57         | bit_expr . LS bit_expr
+   58         | bit_expr . RS bit_expr
+   59         | bit_expr . '+' bit_expr
+   60         | bit_expr . '-' bit_expr
+   61         | bit_expr . '*' bit_expr
+   62         | bit_expr . DIV bit_expr
+   63         | bit_expr . MOD bit_expr
+   64         | bit_expr . '^' bit_expr
+   64         | bit_expr '^' bit_expr .
+
+    $default  reduce using rule 64 (bit_expr)
+
+
+state 222
 
    16 st7: ASC .
 
     $default  reduce using rule 16 (st7)
 
 
-state 219
+state 223
 
    15 st7: DESC .
 
     $default  reduce using rule 15 (st7)
 
 
-state 220
+state 224
 
     9 st4: ID st7 .
 
     $default  reduce using rule 9 (st4)
 
 
-state 221
+state 225
 
    10 st4: INT st7 .
 
     $default  reduce using rule 10 (st4)
 
 
-state 222
+state 226
 
     8 st4: st4 ',' . st4
 
-    ID   shift, and go to state 183
-    INT  shift, and go to state 184
+    ID   shift, and go to state 186
+    INT  shift, and go to state 187
 
-    st4  go to state 233
+    st4  go to state 238
 
 
-state 223
+state 227
 
     6 st3: GROUP BY st4 st5 .
 
     $default  reduce using rule 6 (st3)
 
 
-state 224
-
-   68 simple_expr: EXISTS '(' st1 ')' .
-
-    $default  reduce using rule 68 (simple_expr)
-
-
-state 225
-
-   37 bool_prim: bool_prim IS NOT NUL .
-
-    $default  reduce using rule 37 (bool_prim)
-
-
-state 226
-
-   34 expr: bool_prim IS NOT BOOL .
-
-    $default  reduce using rule 34 (expr)
-
-
-state 227
-
-   40 bool_prim: bool_prim CMP ANY '(' . st1 ')'
-
-    SELECT  shift, and go to state 1
-
-    st1  go to state 234
-
-
 state 228
 
-   39 bool_prim: bool_prim CMP ALL '(' . st1 ')'
+   19 st8: LIMIT INT ',' INT .
 
-    SELECT  shift, and go to state 1
-
-    st1  go to state 235
+    $default  reduce using rule 19 (st8)
 
 
 state 229
 
-   45 pred1: IN '(' st1 . ')'
+   71 simple_expr: EXISTS '(' st1 ')' .
 
-    ')'  shift, and go to state 236
+    $default  reduce using rule 71 (simple_expr)
 
 
 state 230
 
-   28 expr: expr . OR expr
-   29     | expr . XOR expr
-   30     | expr . AND expr
-   50 expr_lst: expr . ',' expr_lst
-   51         | expr .
+   40 bool_prim: bool_prim IS NOT NUL .
 
-    OR   shift, and go to state 161
-    AND  shift, and go to state 162
-    XOR  shift, and go to state 163
-    ','  shift, and go to state 237
-
-    $default  reduce using rule 51 (expr_lst)
+    $default  reduce using rule 40 (bool_prim)
 
 
 state 231
 
-   46 pred1: IN '(' expr_lst . ')'
+   37 expr: bool_prim IS NOT BOOL .
 
-    ')'  shift, and go to state 238
+    $default  reduce using rule 37 (expr)
 
 
 state 232
 
-   47 pred1: BETWEEN bit_expr AND . pred
+   43 bool_prim: bool_prim CMP ANY '(' . st1 ')'
+
+    SELECT  shift, and go to state 1
+
+    st1  go to state 239
+
+
+state 233
+
+   42 bool_prim: bool_prim CMP ALL '(' . st1 ')'
+
+    SELECT  shift, and go to state 1
+
+    st1  go to state 240
+
+
+state 234
+
+   48 pred1: IN '(' st1 . ')'
+
+    ')'  shift, and go to state 241
+
+
+state 235
+
+   31 expr: expr . OR expr
+   32     | expr . XOR expr
+   33     | expr . AND expr
+   53 expr_lst: expr . ',' expr_lst
+   54         | expr .
+
+    OR   shift, and go to state 164
+    AND  shift, and go to state 165
+    XOR  shift, and go to state 166
+    ','  shift, and go to state 242
+
+    $default  reduce using rule 54 (expr_lst)
+
+
+state 236
+
+   49 pred1: IN '(' expr_lst . ')'
+
+    ')'  shift, and go to state 243
+
+
+state 237
+
+   50 pred1: BETWEEN bit_expr AND . pred
 
     ID       shift, and go to state 7
     LITERAL  shift, and go to state 8
     NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
+    EXISTS   shift, and go to state 131
     BOOL     shift, and go to state 12
     INT      shift, and go to state 13
     FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 154
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 157
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
 
-    pred         go to state 239
-    bit_expr     go to state 138
-    simple_expr  go to state 139
-    val          go to state 140
+    pred         go to state 244
+    bit_expr     go to state 140
+    simple_expr  go to state 141
+    val          go to state 142
 
 
-state 233
+state 238
 
     8 st4: st4 . ',' st4
     8    | st4 ',' st4 .
@@ -3582,84 +3632,84 @@ state 233
     $default  reduce using rule 8 (st4)
 
 
-state 234
-
-   40 bool_prim: bool_prim CMP ANY '(' st1 . ')'
-
-    ')'  shift, and go to state 240
-
-
-state 235
-
-   39 bool_prim: bool_prim CMP ALL '(' st1 . ')'
-
-    ')'  shift, and go to state 241
-
-
-state 236
-
-   45 pred1: IN '(' st1 ')' .
-
-    $default  reduce using rule 45 (pred1)
-
-
-state 237
-
-   50 expr_lst: expr ',' . expr_lst
-
-    ID       shift, and go to state 7
-    LITERAL  shift, and go to state 8
-    NOT      shift, and go to state 128
-    NUL      shift, and go to state 10
-    EXISTS   shift, and go to state 129
-    BOOL     shift, and go to state 12
-    INT      shift, and go to state 13
-    FLOAT    shift, and go to state 14
-    '+'      shift, and go to state 130
-    '-'      shift, and go to state 131
-    '('      shift, and go to state 132
-    '~'      shift, and go to state 133
-    '!'      shift, and go to state 134
-
-    expr         go to state 230
-    bool_prim    go to state 136
-    pred         go to state 137
-    expr_lst     go to state 242
-    bit_expr     go to state 138
-    simple_expr  go to state 139
-    val          go to state 140
-
-
-state 238
-
-   46 pred1: IN '(' expr_lst ')' .
-
-    $default  reduce using rule 46 (pred1)
-
-
 state 239
 
-   47 pred1: BETWEEN bit_expr AND pred .
+   43 bool_prim: bool_prim CMP ANY '(' st1 . ')'
 
-    $default  reduce using rule 47 (pred1)
+    ')'  shift, and go to state 245
 
 
 state 240
 
-   40 bool_prim: bool_prim CMP ANY '(' st1 ')' .
+   42 bool_prim: bool_prim CMP ALL '(' st1 . ')'
 
-    $default  reduce using rule 40 (bool_prim)
+    ')'  shift, and go to state 246
 
 
 state 241
 
-   39 bool_prim: bool_prim CMP ALL '(' st1 ')' .
+   48 pred1: IN '(' st1 ')' .
 
-    $default  reduce using rule 39 (bool_prim)
+    $default  reduce using rule 48 (pred1)
 
 
 state 242
 
-   50 expr_lst: expr ',' expr_lst .
+   53 expr_lst: expr ',' . expr_lst
 
-    $default  reduce using rule 50 (expr_lst)
+    ID       shift, and go to state 7
+    LITERAL  shift, and go to state 8
+    NOT      shift, and go to state 130
+    NUL      shift, and go to state 10
+    EXISTS   shift, and go to state 131
+    BOOL     shift, and go to state 12
+    INT      shift, and go to state 13
+    FLOAT    shift, and go to state 14
+    '+'      shift, and go to state 132
+    '-'      shift, and go to state 133
+    '('      shift, and go to state 134
+    '~'      shift, and go to state 135
+    '!'      shift, and go to state 136
+
+    expr         go to state 235
+    bool_prim    go to state 138
+    pred         go to state 139
+    expr_lst     go to state 247
+    bit_expr     go to state 140
+    simple_expr  go to state 141
+    val          go to state 142
+
+
+state 243
+
+   49 pred1: IN '(' expr_lst ')' .
+
+    $default  reduce using rule 49 (pred1)
+
+
+state 244
+
+   50 pred1: BETWEEN bit_expr AND pred .
+
+    $default  reduce using rule 50 (pred1)
+
+
+state 245
+
+   43 bool_prim: bool_prim CMP ANY '(' st1 ')' .
+
+    $default  reduce using rule 43 (bool_prim)
+
+
+state 246
+
+   42 bool_prim: bool_prim CMP ALL '(' st1 ')' .
+
+    $default  reduce using rule 42 (bool_prim)
+
+
+state 247
+
+   53 expr_lst: expr ',' expr_lst .
+
+    $default  reduce using rule 53 (expr_lst)

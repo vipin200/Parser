@@ -56,13 +56,18 @@ int yylex();
         ;
 
     st6: ORDER  BY st4 
-        |
+        | st8
         ;
 
     st7: DESC 
         | ASC  
         | 
-        ;       
+        ;  
+
+    st8: LIMIT INT
+        | LIMIT INT ',' INT
+        |
+        ;
     
     attr: attrList 
         | '*' 

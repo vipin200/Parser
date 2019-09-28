@@ -70,8 +70,7 @@ int yylex();
         ;
     
     attr: attrList 
-        | '*' 
-        | COUNT alias   
+        | '*'  
         ;
 
     attrList:attrList ','  attrList  
@@ -202,6 +201,7 @@ int yylex();
                 | EXISTS '(' st1 ')'
                 | FUNC '(' val ')'
                 | FUNC '(' DISTINCT val ')'
+                | COUNT
                 | val
                 ;
 

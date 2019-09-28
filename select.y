@@ -49,14 +49,14 @@ int yylex();
         | st5 
         ;
 
-    st4: st4 ',' st4 | ID st7 | INT st7 ; 
+    st4: st4 ',' st4 | expr st7  ; 
 
     st5: HAVING expr1 st6 
         | st6 
         ;
 
-    st6: ORDER  BY st4 
-        | st8
+    st6: ORDER  BY st8 st9
+        | st9
         ;
 
     st7: DESC 
@@ -64,7 +64,9 @@ int yylex();
         | 
         ;  
 
-    st8: LIMIT INT
+    st8: st8 ',' st8 | expr1 st7 ;
+
+    st9: LIMIT INT
         | LIMIT INT ',' INT
         |
         ;

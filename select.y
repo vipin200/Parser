@@ -1,168 +1,159 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>  
-int yyerror(const char* s);
+int yyerror();
 int yylex();  
 
 %}
 
-%token W SELECT DISTINCT AS FUNC COUNT FROM WHERE GROUP HAVING ORDER BY LIMIT ASC DESC NUM ID LITERAL
-%token OR AND XOR NOT IS NUL ANY ALL LE GE EQ NE IN BETWEEN LIKE REG LS RS DIV MOD EXISTS TRUE FALSE UNKNOWN
-%left '!'
-%left UNARY '~'
-%left '^'
-%left '*' DIV MOD
-%left '+' '-'
-%left LS RS
-%left '&'
-%left '|'
-%left '=' '<' '>' LE GE EQ NE IS LIKE REG IN
-%left BETWEEN
-%left NOT
-%left AND
+%token SELECT DISTINCT AS FUNC COUNT FROM WHERE GROUP HAVING ORDER BY LIMIT ASC DESC ID LITERAL
+%token OR AND XOR NOT IS NUL ANY ALL CMP IN BETWEEN LIKE REG LS RS DIV MOD EXISTS BOOL INT FLOAT
+
+
 %left OR
-%left ','
-%left '(' ')'
-%left W
+%left XOR
+%left AND
+%nonassoc IN IS LIKE REG
+%left NOT
+%left BETWEEN
+%left CMP 
+%left '|'
+%left '&'
+%left LS RS
+%left '+' '-'
+%left '*' DIV MOD
+%left '^'
+%nonassoc UMINUS
+%left ',' '(' ')'
+
 
 
 
 %%
 
-    start: ST1 ';'              {  
+    start: st1 ';'              {  
                                     printf("INPUT ACCEPTED...\n");
                                     exit(1);
                                 }
         ;
 
-    ST1: SELECT W attr FROM W tableList ST2
-        | SELECT W DISTINCT W attr FROM W tableList ST2
-        
+    st1: SELECT attr FROM tableList st2
+        | SELECT DISTINCT attr FROM tableList st2
+        ;        
 
-    ST2: WHERE W cond W ST3 
-        | ST3 
+    st2: WHERE expr st3 
+        | st3 
         ;
     
-    ST3: GROUP W BY W ST4 ST5
-        | ST5 
+    st3: GROUP  BY st4 st5
+        | st5 
         ;
 
-    ST4: ID ',' W ID | ID W
+    st4: st4 ',' st4 | ID st7 | INT st7 ; 
 
-    ST5: HAVING W cond W ST6 
-        | ST6 
+    st5: HAVING expr st6 
+        | st6 
         ;
 
-    ST6: ORDER W BY W ST4 ST7 
-        | ORDER W BY W simple_expr W ST7
-        | 
+    st6: ORDER  BY st4 
+        |
         ;
 
-    ST7: DESC W
-        | ASC W 
+    st7: DESC 
+        | ASC  
         | 
         ;       
     
     attr: attrList 
-        | '*' W
-        | COUNT  W 
-        | COUNT  W AS W ID W;
-
-    attrList:attrList ',' W attrList  
-            | FUNC '(' ID ')' W 
-            | FUNC '(' DISTINCT W ID ')' W 
-            | ID W
-            | FUNC '(' ID ')' W AS W ID W
-            | FUNC '(' DISTINCT W ID ')' W AS W ID W
-            | ID W AS W ID W 
-            ;
-    
-    tableList:tableList ',' W tableList
-            | ID W
-            |'(' ST1 ')' W AS W ID W;
-    
-    cond: cond W OR W cond 
-        | cond W AND W cond 
-        | cond W XOR W cond
-        | NOT W cond
-        | '!' cond 
-        | '(' cond ')'
-        | bool_prim W IS W bool_val
-        | bool_prim W IS W NOT W bool_val
-        | bool_prim W
+        | '*' 
+        | COUNT alias   
         ;
 
-    bool_val: TRUE | FALSE | UNKNOWN ;
+    attrList:attrList ','  attrList  
+            | FUNC '(' val ')'  alias 
+            | FUNC '(' DISTINCT  val ')'  alias 
+            | val  alias  
+            ;
+
+    alias:AS ID | ;
     
-    bool_prim: bool_prim W IS W NUL
-             | bool_prim W IS W NOT W NUL
-             | bool_prim W EQ W pred
-             | bool_prim cmp_opr pred
-             | bool_prim cmp_opr ALL '(' ST1 ')'
-             | bool_prim cmp_opr ANY '(' ST1 ')'
-             | pred W
-             ;            
+    tableList:tableList ','  tableList
+            | ID  
+            |'(' st1 ')'  alias ;
+    
+    expr: expr OR expr
+        | expr XOR expr
+        | expr AND expr
+        | NOT expr
+        | '(' expr ')'
+        | bool_prim IS BOOL
+        | bool_prim IS NOT BOOL
+        | bool_prim
+        ;
 
-    cmp_opr: W '=' W | W '<' W | W '>' W | W LE W | W GE W | W NE W ;
+    bool_prim:  bool_prim IS NUL
+        | bool_prim IS NOT NUL
+        | bool_prim CMP pred
+        | bool_prim CMP ALL '(' st1 ')'
+        | bool_prim CMP ANY '(' st1 ')'
+        | pred
+        ;
 
-    pred: bit_expr W pred1
-        | bit_expr W NOT W pred1
-        | bit_expr W
+    pred: bit_expr  pred1
+        | bit_expr  NOT  pred1
+        | bit_expr 
         ;    
 
-    pred1: IN '(' ST1 ')'
-         | IN '(' ncond ')'
-         | BETWEEN W bit_expr W AND W pred
-         | LIKE W expr
-         | REG W bit_expr
-         ; 
+    pred1: IN '(' st1 ')'
+        | IN '(' expr_lst ')'
+        | BETWEEN  bit_expr  AND  pred      %prec BETWEEN 
+        | LIKE  simple_expr
+        | REG  bit_expr
+        ; 
 
-    ncond: cond ',' cond | cond ;
+    expr_lst: expr ',' expr_lst | expr ;
 
-    bit_expr: bit_expr W '|' W bit_expr
-            | bit_expr W '&' W bit_expr
-            | bit_expr W LS W bit_expr
-            | bit_expr W RS W bit_expr
-            | bit_expr W '+' W bit_expr
-            | bit_expr W '-' W bit_expr
-            | bit_expr W '*' W bit_expr
-            | bit_expr W DIV W bit_expr
-            | bit_expr W MOD W bit_expr
-            | bit_expr W '^' W bit_expr
-            | expr W
+    bit_expr: bit_expr '|' bit_expr
+            | bit_expr '&' bit_expr
+            | bit_expr LS bit_expr
+            | bit_expr RS bit_expr
+            | bit_expr '+' bit_expr
+            | bit_expr '-' bit_expr
+            | bit_expr '*' bit_expr
+            | bit_expr DIV bit_expr
+            | bit_expr MOD bit_expr
+            | bit_expr '^' bit_expr
+            | simple_expr
             ;
 
-    expr: '(' ST1 ')'
-        | EXISTS '(' ST1 ')'
-        | ID 
-        | expr2 W
+    simple_expr: '+' simple_expr        %prec UMINUS
+                | '-' simple_expr       %prec UMINUS
+                | '~' simple_expr       %prec UMINUS
+                | '!' simple_expr       %prec UMINUS
+                | '(' st1 ')'
+                | EXISTS '(' st1 ')'
+                | val
+                ;
+
+    val: FLOAT
+        | NUL
+        | LITERAL
+        | BOOL
+        | ID
+        | INT
         ;
-
-    expr2: '+' expr2  %prec UNARY
-         | '-' expr2  %prec UNARY
-         | '~' expr2
-         | '!' expr2
-         | simple_expr W
-         ; 
-
-    simple_expr: NUM
-               | LITERAL
-               | TRUE
-               | FALSE
-               | NUL
-               ;
 
 %%
 
-int yyerror(char const *s)
+int yyerror()
 {
-    printf("Invalid Statement : %s\n",s);
+    printf("INVALID STATEMENT !\n");
     return 0;
 }
 
 int main()
 {
-    printf("Enter the query(Enter Space between strings) : ");
+    printf("ENTER THE QUERY :\n");
     yyparse();
     return 1;
 }        

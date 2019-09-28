@@ -39,95 +39,85 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     W = 258,
-     SELECT = 259,
-     DISTINCT = 260,
-     AS = 261,
-     FUNC = 262,
-     COUNT = 263,
-     FROM = 264,
-     WHERE = 265,
-     GROUP = 266,
-     HAVING = 267,
-     ORDER = 268,
-     BY = 269,
-     LIMIT = 270,
-     ASC = 271,
-     DESC = 272,
-     NUM = 273,
-     ID = 274,
-     LITERAL = 275,
-     OR = 276,
-     AND = 277,
-     XOR = 278,
-     NOT = 279,
-     IS = 280,
-     NUL = 281,
-     ANY = 282,
-     ALL = 283,
-     LE = 284,
-     GE = 285,
-     EQ = 286,
-     NE = 287,
-     IN = 288,
-     BETWEEN = 289,
-     LIKE = 290,
-     REG = 291,
-     LS = 292,
-     RS = 293,
-     DIV = 294,
-     MOD = 295,
-     EXISTS = 296,
-     TRUE = 297,
-     FALSE = 298,
-     UNKNOWN = 299,
-     UNARY = 300
+     SELECT = 258,
+     DISTINCT = 259,
+     AS = 260,
+     FUNC = 261,
+     COUNT = 262,
+     FROM = 263,
+     WHERE = 264,
+     GROUP = 265,
+     HAVING = 266,
+     ORDER = 267,
+     BY = 268,
+     LIMIT = 269,
+     ASC = 270,
+     DESC = 271,
+     ID = 272,
+     LITERAL = 273,
+     OR = 274,
+     AND = 275,
+     XOR = 276,
+     NOT = 277,
+     IS = 278,
+     NUL = 279,
+     ANY = 280,
+     ALL = 281,
+     CMP = 282,
+     IN = 283,
+     BETWEEN = 284,
+     LIKE = 285,
+     REG = 286,
+     LS = 287,
+     RS = 288,
+     DIV = 289,
+     MOD = 290,
+     EXISTS = 291,
+     BOOL = 292,
+     INT = 293,
+     FLOAT = 294,
+     UMINUS = 295
    };
 #endif
 /* Tokens.  */
-#define W 258
-#define SELECT 259
-#define DISTINCT 260
-#define AS 261
-#define FUNC 262
-#define COUNT 263
-#define FROM 264
-#define WHERE 265
-#define GROUP 266
-#define HAVING 267
-#define ORDER 268
-#define BY 269
-#define LIMIT 270
-#define ASC 271
-#define DESC 272
-#define NUM 273
-#define ID 274
-#define LITERAL 275
-#define OR 276
-#define AND 277
-#define XOR 278
-#define NOT 279
-#define IS 280
-#define NUL 281
-#define ANY 282
-#define ALL 283
-#define LE 284
-#define GE 285
-#define EQ 286
-#define NE 287
-#define IN 288
-#define BETWEEN 289
-#define LIKE 290
-#define REG 291
-#define LS 292
-#define RS 293
-#define DIV 294
-#define MOD 295
-#define EXISTS 296
-#define TRUE 297
-#define FALSE 298
-#define UNKNOWN 299
-#define UNARY 300
+#define SELECT 258
+#define DISTINCT 259
+#define AS 260
+#define FUNC 261
+#define COUNT 262
+#define FROM 263
+#define WHERE 264
+#define GROUP 265
+#define HAVING 266
+#define ORDER 267
+#define BY 268
+#define LIMIT 269
+#define ASC 270
+#define DESC 271
+#define ID 272
+#define LITERAL 273
+#define OR 274
+#define AND 275
+#define XOR 276
+#define NOT 277
+#define IS 278
+#define NUL 279
+#define ANY 280
+#define ALL 281
+#define CMP 282
+#define IN 283
+#define BETWEEN 284
+#define LIKE 285
+#define REG 286
+#define LS 287
+#define RS 288
+#define DIV 289
+#define MOD 290
+#define EXISTS 291
+#define BOOL 292
+#define INT 293
+#define FLOAT 294
+#define UMINUS 295
 
 
 

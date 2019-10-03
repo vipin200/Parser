@@ -39,6 +39,7 @@ int yylex();
 
     st1: SELECT attr FROM tableList st2
         | SELECT DISTINCT attr FROM tableList st2
+        |SELECT ALL attr FROM tableList st2
         ;        
 
     st2: WHERE expr st3 

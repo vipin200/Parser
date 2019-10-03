@@ -1,8 +1,8 @@
 %option case-insensitive
 %{
     #include <stdio.h> 
-    #include "y.tab.h"
-    int yyerror();
+    #include "y.tab.h" 
+    int yyerror(); 
     
 %}
 
@@ -48,6 +48,8 @@ true                                        return BOOL;
 false                                       return BOOL;
 unknown                                     return BOOL;
 
+{KEYWORDS}                                  yyerror;
+
 [1-9][0-9]*                                 return INT;
 [0-9]*(\.[0-9]+)?                           return FLOAT;
 
@@ -69,7 +71,7 @@ X'[0-9A-F]+' |  0X[0-9A-F]+                 return LITERAL;
 
 [ \t\n]                                     ;       
 .                                           return *yytext;
-{KEYWORDS}                                  { yyerror(); }
+
 
 %%
 

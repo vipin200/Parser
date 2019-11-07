@@ -48,7 +48,7 @@ true                                        return BOOL;
 false                                       return BOOL;
 unknown                                     return BOOL;
 
-{KEYWORDS}                                  yyerror;
+{KEYWORDS}                                  yyerror();
 
 [1-9][0-9]*                                 return INT;
 [0-9]*(\.[0-9]+)?                           return FLOAT;

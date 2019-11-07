@@ -213,6 +213,7 @@ int yylex();
 int yyerror()
 {
     printf("INVALID STATEMENT !\n");
+    exit(1);
     return 0;
 }
 

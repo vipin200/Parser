@@ -1298,7 +1298,7 @@ return BOOL;
 case 36:
 YY_RULE_SETUP
 #line 51 "select.l"
-yyerror;
+yyerror();
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
